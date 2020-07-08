@@ -1,0 +1,104 @@
+body {
+    display: initial; /* my sticky footer breaks (body table) leaflet */
+}
+
+table {
+    margin-left:20%;
+    margin-right:20%;
+}
+
+table tr {
+    font-family: 'Source Sans Pro Light', sans-serif;
+    font-style: normal;
+    font-size: 1.3em;
+}
+
+table tr td {
+    padding: 0.5em 1em;
+}
+
+small {
+    font-size: 0.5em;
+    font-color: linen;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#map {
+     height: min-height: 200px;
+}
+
+#map .leaflet-marker-pane,
+#map .leaflet-shadow-pane {
+    display: none;
+}
+@media (max-width: 680px) {
+    #map .leaflet-control {
+        display: none;
+    }
+}
+
+.ui-select {
+    background:#fff;
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:100;
+    padding:10px;
+    border-radius:3px;
+}
+
+div#content.whitepage {
+    margin: 12px 40px;
+    padding: 7px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 680px) {
+    div#content.whitepage {
+        padding: 1.2em;
+        width: calc(100% - 20px);
+        margin: -10px auto;
+    }
+}
+
+div#content.whitepage p,
+div#content.whitepage h1 {
+    margin: 0;
+    font-size: 1.8em !important;
+}
+
+div#content.whitepage h1 span {
+    white-space: nowrap;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 15em;
+}
+
+div#content .elevation {
+    float: none;
+    clear: both;
+}
+
+@media (max-width: 680px) {
+    div#content .elevation {
+        display: none;
+    }
+}
+
+div#content .elevation svg {
+    font-size: 80%;
+    background-color: transparent;
+    width: 100%;
+    height: auto;
+}
