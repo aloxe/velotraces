@@ -4,7 +4,7 @@
 
 moment.locale('fr');
 
-var trackFolder = '../allvelotracks';
+var trackFolder = 'allvelotracks';
 
 var ownCopyright = ' et <a href="http://alix.guillard.fr">Alix Guillard</a>';
 
@@ -226,7 +226,7 @@ $(document).ready(function () {
 
     // if we have a file define actualtrack
     var actualtrack = (file) ? trackFolder + "/" + file : false;
-
+    console.log(actualtrack);
     if (actualtrack) {
 
         // var map = new L.Map('map');

@@ -5,9 +5,9 @@
     <title>🚲tracks</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/png" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/fonts.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="restyle.css" />
+    <link rel="stylesheet" href="http://alix.guillard.fr/css/fonts.css" />
+    <link rel="stylesheet" href="http://alix.guillard.fr/css/style.css" />
+    <link rel="stylesheet" href="css/restyle.css" />
 </head>
 <body>
 
@@ -54,7 +54,7 @@ foreach ($tracks as $key => $val) {
         echo $date;
         echo "</td><td><small>";
         echo $i."</small></td>";
-        echo "<td><a href=\"http://alix.guillard.fr/cartes/velo/#?f=" .$val. "\">" .$trackname. "</a></td><td>";
+        echo "<td><a href=\"./#?f=" .$val. "\">" .$trackname. "</a></td><td>";
         foreach($countries as $k => $v)
         {
             // convert iso 3166 letter to flag
