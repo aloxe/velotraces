@@ -4,17 +4,19 @@ var trackFolder = 'allvelotracks';
 // available tiles
 var baseMaps = {
     "OSM Hike Bike": hikebike,
-    "Mapbox": mapbox,
-    "surfer": surfer,
-    "surfer1": surfer1,
-    "OSM Hike Bike": hikebike,
-    "OSM fr labels": osmfr,
-    "Open Topo Map": topo1,
-    "Esri Topo Map": topo2,
-    "Esri Satellite": satellite,
-    "Esri terrain": terrain,
-    "HERE": here,
-    "Hydra": hydra
+    "Open Topo Map": opentopo,
+    "OSM Fr labels": osmfr,
+    "Mapbox street": mapbox_street,
+    "Mapbox outdoor": mapbox_outdoor,
+    "Mapbox light": mapbox_light,
+    "Mapbox dark": mapbox_dark,
+    "Thunderforest landscape": t_landscape,
+    "Thunderforest cycle": t_cycle,
+    "Thunderforest neighbourhood": t_neighbourhood,
+    "Esri Satellite": esri_satellite,
+    "Esri World Street": esri_street,
+    "Esri Topo Map": esri_topo,
+    "Esri World Physical": esri_physical,
 };
 
 // variables from options in URL
@@ -103,7 +105,7 @@ function findCountries(file) {
 
 $(document).ready(function () {
     var map = L.map('map', {
-        layers: [topo2]
+        layers: [esri_topo]
     });
 
     // add change layer box
