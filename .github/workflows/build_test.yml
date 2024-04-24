@@ -1,6 +1,22 @@
-name: Build new velotraces
+name: Deploy test velotraces
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Environment'
+        default: 'test'
+        required: true
+        options:
+        - test
+        - prod
+      prod:
+        type: boolean
+        description: 'Deploy to prod?'
+        default: false
+        required: true
+
   push:
     branches: [ test ]
 
