@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import './SideBar.css';
 import { countryCodeToFlag } from '../helpers/countryUtils';
