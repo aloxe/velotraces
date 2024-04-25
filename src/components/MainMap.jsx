@@ -1,24 +1,11 @@
-import React from 'react';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
-import { gpx } from "togeojson";
 import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtils";
+import { getGeoJson } from "../helpers/geoUtils";
 
-const getGeoJson = async (url) => {
-
-  try {
-    const response = await axios.get('/api/velotraces/allvelotracks/'+url);
-    const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
-    const geojson = gpx(xmlDom) // maybe use omnivore instead
-    return geojson;
-  } catch (error) {
-    console.error('Error fetching gpx data:', error.message);
-    return
-  }
-};
 
 const MainMap = () => {
   const [step, setStep] = useState(0);
