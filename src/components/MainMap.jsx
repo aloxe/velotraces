@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
+import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import { gpx } from "togeojson";
@@ -7,11 +8,16 @@ import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtils";
 
 const getGeoJson = async (url) => {
-  const response = await fetch('https://alix.guillard.fr/velotraces/allvelotracks/'+url);
-  const data = await response.text();
-  const xmlDom = new DOMParser().parseFromString(data, 'application/xml');
-  const geojson = gpx(xmlDom)
-  return geojson;
+
+  try {
+    const response = await axios.get('/api/velotraces/allvelotracks/'+url);
+    const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
+    const geojson = gpx(xmlDom) // maybe use omnivore instead
+    return geojson;
+  } catch (error) {
+    console.error('Error fetching gpx data:', error.message);
+    return
+  }
 };
 
 const MainMap = () => {
@@ -37,9 +43,12 @@ const MainMap = () => {
   useEffect(() => {
     if (step===1) {
       const getGpxListAwaited = async () => {
-        const response = await fetch(`https://alix.guillard.fr/velotraces/tracks.php?y=2010&c=`);
-        const data = await response.json();
-        setGpxList(data)
+        try {
+          const response = await axios.get('/api/velotraces/tracks.php?y=2010&c=');
+          setGpxList(response.data)
+        } catch (error) {
+          console.error('oups Error fetching data:', error.message);
+        }
       }
       getGpxListAwaited()
       setStep(2)
@@ -85,10 +94,13 @@ const MainMap = () => {
       const getGpxListAwaited = async () => {
         const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
         const loadYear = currentYear === 'all' ? '' : currentYear;
-        const response = await fetch(`https://alix.guillard.fr/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
-        const data = await response.json();
-        setGpxList(data)
-        setStep(2)
+        try {
+          const response = await axios.get(`/api/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
+          setGpxList(response.data)
+          setStep(2)
+        } catch (error) {
+          console.error('Error fetching gpx list data:', error.message);
+        }
       }
       getGpxListAwaited()
     }
