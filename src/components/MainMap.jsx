@@ -5,7 +5,7 @@ import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtils";
 import { getGeoJson } from "../helpers/geoUtils";
-
+import Popup from "./Popup";
 
 const MainMap = () => {
   const [step, setStep] = useState(0);
@@ -74,7 +74,7 @@ const MainMap = () => {
       setStep(4)
       setGeoJsonListAwaited(gpxList)
     }
-  }, [step]);
+  }, [step, gpxList]);
 
   useEffect(() => {
     if (step===6) {
@@ -109,18 +109,27 @@ const MainMap = () => {
     if (!geojson)  return null;
     return (
       <GeoJson
-          key={key}
-          data={geojson}
-          styleCallback={() => {
-            return {
-              strokeWidth: "2",
-              stroke: "red",
-              r: "20",
-            };
-          }}
-        />
+        key={key}
+        data={geojson}
+        styleCallback={() => {
+          return {
+            strokeWidth: "2",
+            stroke: "red",
+            r: "20",
+          };
+        }}
+        onClick={handleClick}
+      >
+      </GeoJson>
     );
   };
+
+  const handleClick = (e) => {
+    const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
+    popEl.style.display = 'block';
+    popEl.style.left = e.event.clientX - 99+'px'
+    popEl.style.top = e.event.clientY - 108+'px'
+  }
 
   return (
     <>
@@ -138,6 +147,7 @@ const MainMap = () => {
           currentCountry={currentCountry}
           handleClick={handleClickSideBar}
         />
+        <Popup key='popup' />
         { step>=3 && renderGeoJson(geojson, 'prems') }
         { step===4 && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         { step===5 && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
