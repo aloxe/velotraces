@@ -4,7 +4,7 @@ import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtils";
-import { getGeoJson } from "../helpers/geoUtils";
+import { getGeoJson } from "../helpers/gpxUtils";
 import Popup from "./Popup";
 
 const MainMap = () => {
@@ -118,17 +118,22 @@ const MainMap = () => {
             r: "20",
           };
         }}
-        onClick={handleClick}
+        // onClick={handleClick} 
+        onClick={e => handleClick(e, geojson.title, geojson.date, geojson.countries)} 
       >
       </GeoJson>
     );
   };
 
-  const handleClick = (e) => {
+  const handleClick = (e, title, date, countries) => {
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
     popEl.style.display = 'block';
     popEl.style.left = e.event.clientX - 99+'px'
     popEl.style.top = e.event.clientY - 108+'px'
+
+    popEl.children[1].children[0].children[0].innerText = title
+    popEl.children[1].children[0].children[1].innerText = date
+    popEl.children[1].children[0].children[2].innerText = countries
   }
 
   return (
