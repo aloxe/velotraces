@@ -1,4 +1,3 @@
-import React from 'react';
 import MainMap from './components/MainMap'
 import './App.css'
 
