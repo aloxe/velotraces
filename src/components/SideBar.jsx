@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './SideBar.css';
-import { countryCodeToFlag } from '../helpers/countryUtils';
+import { countryCodeToFlag } from '../helpers/countryUtil';
 
 const text = {
     1: 'Loading trace list…',
