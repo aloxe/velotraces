@@ -3,9 +3,10 @@ import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
-import { flagToCountryCode } from "../helpers/countryUtils";
-import { getGeoJson } from "../helpers/gpxUtils";
+import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
+import { getGeoJson } from "../helpers/gpxUtil";
 import Popup from "./Popup";
+import { formatDate } from "../helpers/timeUtil";
 
 const MainMap = () => {
   const [step, setStep] = useState(0);
@@ -128,12 +129,14 @@ const MainMap = () => {
   const handleClick = (e, title, date, countries) => {
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
     popEl.style.display = 'block';
-    popEl.style.left = e.event.clientX - 99+'px'
-    popEl.style.top = e.event.clientY - 108+'px'
+    // bellow we don't attach the popup to the trace
+    // as it would move with the map (FIXME)
+    // popEl.style.left = e.event.clientX - 99+'px'
+    // popEl.style.top = e.event.clientY - 108+'px'
 
-    popEl.children[1].children[0].children[0].innerText = title
-    popEl.children[1].children[0].children[1].innerText = date
-    popEl.children[1].children[0].children[2].innerText = countries
+    popEl.children[1].children[0].children[0].innerText = "🚲 " + title
+    popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", date)
+    popEl.children[1].children[0].children[2].innerText = countries.map(cc => countryCodeToFlag(cc)).join(' ')
   }
 
   return (

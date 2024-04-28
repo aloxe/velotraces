@@ -1,9 +1,8 @@
 export function countryCodeToFlag(countrycode) {
-    if (countrycode?.length !== 2) return;
-    if (countrycode === 'xx') return '🌍' // not a country, used for «all»
-    
-    countrycode = countrycode.toUpperCase()
-
+  if (countrycode?.length !== 2) return;
+  if (countrycode === 'xx') return '🌍' // not a country, used for «all»
+  
+  countrycode = countrycode.toUpperCase()
   const offset = 127397;
   const A = 65;
   const Z = 90;
