@@ -16,6 +16,49 @@ export const getGeoJson = async (url) => {
   }
 }
 
+export function getBoundingBox(data) {
+  var bounds = {}, coords, latitude, longitude;
+
+  for (var i = 0; i < data.features.length; i++) {
+    coords = data.features[i].geometry.coordinates;
+
+    for (var j = 0; j < coords.length; j++) {
+      longitude = coords[j][0];
+      latitude = coords[j][1];
+      bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+      bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+      bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+      bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+    }
+  }
+  return bounds;
+}
+
+export function getListBoundingBox(data) {
+  var bounds = {}, coords, latitude, longitude;
+
+  for (var h = 0; h < data.length; h++) {
+    for (var i = 0; i < data[h].features.length; i++) {
+      coords = data[h].features[i].geometry.coordinates;
+      for (var j = 0; j < coords.length; j++) {
+        longitude = coords[j][0];
+        latitude = coords[j][1];
+        bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+        bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+        bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+        bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+      }
+    }
+  }
+  return bounds;
+}
+
+export const getCenter = bbox => {
+  return {
+    lon: (bbox.xMax + bbox.xMin)/2,
+    lat: (bbox.yMax + bbox.yMin)/2
+  }
+}
 
 export const getDate = (file) => {
   const array = file.split('-');
