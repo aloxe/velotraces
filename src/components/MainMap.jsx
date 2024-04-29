@@ -4,7 +4,7 @@ import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getGeoJson } from "../helpers/gpxUtil";
+import { getBoundingBox, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 
@@ -12,6 +12,7 @@ const MainMap = () => {
   const [step, setStep] = useState(0);
   const [gpxList, setGpxList] = useState([]);
   const [geojson, setGeojson] = useState(null);
+  const [center, setCenter] = useState({lon:3, lat:50});
   const [geojsonList, setGeojsonList] = useState([]);
 
   const [currentYear, setCurrentYear] = useState('2024');
@@ -48,6 +49,9 @@ const MainMap = () => {
       const setGeoJsonAwaited = async (url) => {
         const geojson = await getGeoJson(url)
         setGeojson(geojson)
+        const bbox = getBoundingBox(geojson)
+        const center = getCenter(bbox)
+        setCenter(center)
       }
       setStep(3)
       setGeoJsonAwaited(gpxList[gpxList.length-1])
@@ -63,11 +67,14 @@ const MainMap = () => {
             const geojson = await getGeoJson(url)
             geojsonList.push(geojson)
             setGeojsonList(geojsonList) 
-            // need to find a way to rerender on each track
+            // need to find a way to render on each track
           }
         })
         Promise.all(requests).then(() => {
           setGeojsonList(geojsonList)
+          const bbox = getListBoundingBox(geojsonList)
+          const center = getCenter(bbox)
+          setCenter(center)
           setStep(5) // make sure we are done
         })
       }
@@ -84,8 +91,12 @@ const MainMap = () => {
         const loadYear = currentYear === 'all' ? '' : currentYear;
         try {
           const response = await axios.get(`/api/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
-          setGpxList(response.data)
-          setStep(2)
+          if (response.data.length > 1) {
+            setGpxList(response.data)
+            setStep(2)
+          } else {
+            setStep(5)
+          }
         } catch (error) {
           console.error('Error fetching gpx list data:', error.message);
         }
@@ -143,10 +154,11 @@ const MainMap = () => {
     <>
       <Map
         provider={osm}
-        defaultCenter={[50.879, 4.6997]}
         defaultZoom={8}
         zoomSnap={false}
         attributionPrefix={<>aloxe</>}
+        center={[center.lat, center.lon]}
+        zoom={8}
       >
 
         <SideBar 
