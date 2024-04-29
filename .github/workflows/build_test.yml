@@ -10,12 +10,6 @@ on:
         required: true
         options:
         - test
-        - prod
-      prod:
-        type: boolean
-        description: 'Deploy to prod?'
-        default: false
-        required: true
 
   push:
     branches: [ test ]
