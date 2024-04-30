@@ -1,0 +1,28 @@
+/* required styles */
+
+.leaflet-container {
+    width: 100wh;
+    height: 100vh;
+}
+
+.fullscreen .leaflet-container {
+    height: calc(100vh - 45px);
+}
+
+.fullscreen .leaflet-container .leaflet-control-attribution {
+    /* background-color: pink;
+    position:fixed; */
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.fullscreen .leaflet-container .leaflet-top {
+    top: 10px;
+  }
+
+.leaflet-zoom-anim
+.leaflet-zoom-animated {
+  transition-timing-function: linear;
+  transition-duration: 5ms;
+}
