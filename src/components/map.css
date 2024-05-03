@@ -24,5 +24,5 @@
 .leaflet-zoom-anim
 .leaflet-zoom-animated {
   transition-timing-function: linear;
-  transition-duration: 5ms;
+  transition-duration: 1ms;
 }

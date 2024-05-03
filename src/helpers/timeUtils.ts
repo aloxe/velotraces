@@ -70,6 +70,9 @@ export const getOption = (format:string) => {
   
   export const formatDate = (lang = "en-GB", format:string, dateString:string) => {
     if (!dateString) return "";
+    if (dateString.length === 7) {
+      dateString = dateString + "-01"
+    }
     const hasDash = format.includes("-");
     const locale = lang === "en" ? "en-GB" : lang
     const options = getOption(format);

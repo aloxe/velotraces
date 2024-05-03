@@ -19,6 +19,15 @@ export const getGeoJson = async (url:string) => {
   }
 }
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+// export const getCenter = (geojson: any) => {
+//   const bbox = geojson.getBounds()
+//   return {
+//     lon: (bbox.xMax + bbox.xMin)/2,
+//     lat: (bbox.yMax + bbox.yMin)/2
+//   }
+// }
+
 export const getDate = (file:string) => {
     const array = file.split('-');
     array[2] = array[2].substring(0, 2).replace(/\D/g, '');

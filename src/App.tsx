@@ -1,9 +1,9 @@
-import MainMap from './components/MainMap'
+import Wrapper from './components/Wrapper'
 import './App.css'
 
 const App = () =>
     <div className='App'>
-      <MainMap />
+      <Wrapper />
     </div>
 
 export default App
