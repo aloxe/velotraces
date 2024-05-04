@@ -1,10 +1,15 @@
 import './Popup.css';
 
 
-const Popup = () => { 
+const Popup = ({currentFocus}) => { 
 
     const handleClick = (e) => {
-        console.log(e.target.parentNode);
+        if (currentFocus) {
+            currentFocus.map(el => {
+              el.setAttribute('stroke', 'red');
+              el.setAttribute('opacity', '0.5');
+            })
+          }
         e.target.parentNode.style.display = 'none'
     }
 

@@ -69,3 +69,12 @@
     font-style: italic;
     font-size: smaller;
 }
+
+.rotate {
+    line-height: 10px;
+    text-align: center;
+    animation: rotate 1.5s linear infinite; 
+  }
+  @keyframes rotate{
+    to{ transform: rotate(360deg); }
+  }
