@@ -31,9 +31,8 @@ const SideBar = ({step, currentYear, currentCountry, handleClick}) => {
             {width === 'none' ? '»' : '×'}
         </div>
         <div className={`sidebar ${width}`}>
-            <div className='status'>
-                    {text[step]}
-            </div>
+            {step < 5 ? <div className='rotate'>↻</div>
+            : <div className='status'>{text[step]}</div>}
             <h3>years</h3>
             <div className='tags'>
                 {years.map(year => (<button className={`tag ${currentYear === year.toString() && 'select'}`} onClick={handleClick} key={year}>{year}</button>))}

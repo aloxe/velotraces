@@ -17,6 +17,7 @@ const MainMap = () => {
 
   const [currentYear, setCurrentYear] = useState('2024');
   const [currentCountry, setCurrentCountry] = useState('xx');
+  const [currentFocus, setCurrentFocus] = useState(null);
 
 // TODO use swr
 
@@ -125,9 +126,10 @@ const MainMap = () => {
         data={geojson}
         styleCallback={() => {
           return {
-            strokeWidth: "2",
-            stroke: "red",
-            r: "20",
+            strokeWidth: "3",
+            stroke: 'red',
+            opacity: '0.5',
+            r: '1',
           };
         }}
         // onClick={handleClick} 
@@ -138,6 +140,19 @@ const MainMap = () => {
   };
 
   const handleClick = (e, title, date, countries) => {
+    if (currentFocus) {
+      currentFocus.map(el => {
+        el.setAttribute('stroke', 'red');
+        el.setAttribute('opacity', '0.5');
+      })
+    }
+    const svgPathArray = [...e.event.target.parentNode.children];
+    svgPathArray.map(el => {
+      el.setAttribute('stroke', 'blue');
+      el.setAttribute('opacity', '1');
+    })
+    setCurrentFocus(svgPathArray)
+
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
     popEl.style.display = 'block';
     // bellow we don't attach the popup to the trace
@@ -167,7 +182,7 @@ const MainMap = () => {
           currentCountry={currentCountry}
           handleClick={handleClickSideBar}
         />
-        <Popup key='popup' />
+        <Popup key='popup' currentFocus={currentFocus} />
         { step>=3 && renderGeoJson(geojson, 'prems') }
         { step===4 && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         { step===5 && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
