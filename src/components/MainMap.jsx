@@ -124,15 +124,20 @@ const MainMap = () => {
       <GeoJson
         key={key}
         data={geojson}
-        styleCallback={() => {
+        styleCallback={(feature) => {
+          if (feature?.geometry?.type === "Point") {
+            // removing ugly display for points. Points still triggers some bug in zoom and page positionning
+            // TODO: track issue
+            // use patch-package to update pigeon-maps 
+            return { strokeWidth: "0", stroke: "black", r: '0', };
+          }
           return {
             strokeWidth: "3",
             stroke: 'red',
+            strokeLinejoin: 'round',
             opacity: '0.5',
-            r: '1',
           };
         }}
-        // onClick={handleClick} 
         onClick={e => handleClick(e, geojson.title, geojson.date, geojson.countries)} 
       >
       </GeoJson>
