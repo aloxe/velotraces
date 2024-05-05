@@ -107,6 +107,8 @@ const MainMap = () => {
   }, [step, currentYear, currentCountry]);
 
   const handleClickSideBar = (e) => {
+    // close popup
+    e.target.parentNode.parentNode.nextSibling.style.display = 'none'
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
     } else if (e.target.innerText === 'all') {
