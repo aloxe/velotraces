@@ -80,3 +80,10 @@ export const getTitle = (file) => {
 }
 
 export const getCountries = (file) => file.split('.').slice(1, -1)
+
+import lineDistance from "turf-line-distance";
+
+export const getLength = (geojson) => {
+  const length = lineDistance(geojson, 'kilometers');
+  return length.toFixed(2)
+}
