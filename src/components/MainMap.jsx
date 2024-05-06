@@ -4,7 +4,7 @@ import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getBoundingBox, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
+import { getBoundingBox, getCenter, getGeoJson, getLength, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 
@@ -140,13 +140,13 @@ const MainMap = () => {
             opacity: '0.5',
           };
         }}
-        onClick={e => handleClick(e, geojson.title, geojson.date, geojson.countries)} 
+        onClick={e => handleClick(e, geojson)} 
       >
       </GeoJson>
     );
   };
 
-  const handleClick = (e, title, date, countries) => {
+  const handleClick = (e, geojson) => {
     if (currentFocus) {
       currentFocus.map(el => {
         el.setAttribute('stroke', 'red');
@@ -167,9 +167,10 @@ const MainMap = () => {
     // popEl.style.left = e.event.clientX - 99+'px'
     // popEl.style.top = e.event.clientY - 108+'px'
 
-    popEl.children[1].children[0].children[0].innerText = "🚲 " + title
-    popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", date)
-    popEl.children[1].children[0].children[2].innerText = countries.map(cc => countryCodeToFlag(cc)).join(' ')
+    popEl.children[1].children[0].children[0].innerText = "🚲 " + geojson.title
+    popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", geojson.date)
+    popEl.children[1].children[0].children[2].innerText = geojson.countries.map(cc => countryCodeToFlag(cc)).join(' ')
+    popEl.children[1].children[0].children[3].innerText = getLength(geojson)+'km' || '';
   }
 
   return (

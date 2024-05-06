@@ -22,6 +22,7 @@ const Popup = ({currentFocus}) => {
                     <div className='popup-title'>🚲 title</div>
                     <div className='popup-date'>date</div>
                     <div>pays</div>
+                    <div>stats</div>
                 </div>
             </div>
             <div className='popup-tip-container'>
