@@ -1,10 +1,5 @@
-/* definitions for
-   tiles, track locations, overlays, variables in url
-   */
-
-moment.locale('fr');
-
-var trackFolder = 'allvelotracks';
+moment.locale('en');
+var trackFolder = '/data/velo/gpx';
 
 var ownCopyright = ' et <a href="http://alix.guillard.fr">Alix Guillard</a>';
 
@@ -292,6 +287,7 @@ $(document).ready(function () {
         filetoread = "./tracks.php?y=" + year + "&c=" + country;
         var layer = L.mapbox.featureLayer();
 
+<<<<<<< HEAD
     // test first if the data contains tracks
     var jqxhr = $.getJSON(filetoread, function( data ) {
 
@@ -313,6 +309,23 @@ $(document).ready(function () {
 
                 /* DEBUG */
                 // console.log(" in Y= "+ year + "\n and C= " + country + "\n i // is "+ i +"\n val is "+ val);
+=======
+        // test first if the data contains tracks
+        var jqxhr = $.getJSON(filetoread, function( data ) {
+            if (!data || data.length <=0) {
+                year = "2015";
+                filetoread = "./tracks.php?y=" + year + "&c=" + country;
+            }
+        }).fail(function() {
+            console.error( "error can't open track list" );
+        }).complete(function() {
+            $.getJSON(filetoread, function(tracks) {
+                var arrayLayer = new Array();
+                var nameUrl = new Array;
+                var countryUrl = new Array;
+                var yearUrl = new Array;
+                var trackPopup = new Array;
+>>>>>>> 52d319c (cosmetics + change path)
 
                 var objectLayer = {
                     id: i,
