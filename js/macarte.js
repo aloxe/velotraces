@@ -1,5 +1,5 @@
 moment.locale('en');
-var trackFolder = 'allvelotracks';
+var trackFolder = '/data/velo/gpx';
 
 // available tiles
 var baseMaps = {
@@ -164,13 +164,12 @@ $(document).ready(function () {
 
         // test first if the data contains tracks
         var jqxhr = $.getJSON(filetoread, function( data ) {
-
-        if (!data || data.length <=0) {
-            year = "2015";
-            filetoread = "./tracks.php?y=" + year + "&c=" + country;
-        }
+            if (!data || data.length <=0) {
+                year = "2015";
+                filetoread = "./tracks.php?y=" + year + "&c=" + country;
+            }
         }).fail(function() {
-            console.log( "error can't open track list" );
+            console.error( "error can't open track list" );
         }).complete(function() {
             $.getJSON(filetoread, function(tracks) {
                 var arrayLayer = new Array();
