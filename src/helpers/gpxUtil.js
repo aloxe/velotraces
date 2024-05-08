@@ -5,7 +5,14 @@ export const getGeoJson = async (url) => {
   try {
     const response = await axios.get('/api/velotraces/allvelotracks/'+url);
     const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
-    const geojson = gpx(xmlDom) // maybe use omnivore instead?
+    const geojson = gpx(xmlDom)
+    
+    // removing features with points
+    if (geojson.features.filter(feature => feature.geometry.type === "Point").length > 0 ) {
+      const featuresFiltered = geojson && geojson.features.filter(feature => feature.geometry.type !== "Point");
+      geojson.features = featuresFiltered
+    }
+    // adding metadata
     geojson.date = getDate(url)
     geojson.title = getTitle(url)
     geojson.countries = getCountries(url)
@@ -72,7 +79,6 @@ export const getDate = (file) => {
   return fileDate;
 }
 
-
 export const getTitle = (file) => {
   const date = getDate(file);
   const long = parseInt(file.length) - parseInt(date.length) - 4;
@@ -98,7 +104,7 @@ export const getDistanceList = (geojsonList) => {
       if (json) {
         distance = distance + parseInt(json.distance)
       } else {
-        console.log("no json in " + i, geojsonList);
+        console.error("no json in " + i, geojsonList);
       }})
   return distance
 }
