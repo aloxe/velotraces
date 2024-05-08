@@ -56,6 +56,7 @@ export function getListBoundingBox(data) {
 }
 
 export const getCenter = bbox => {
+  if (!bbox) return;
   return {
     lon: (bbox.xMax + bbox.xMin)/2,
     lat: (bbox.yMax + bbox.yMin)/2
@@ -93,6 +94,11 @@ export const getDistance = (geojson) => {
 export const getDistanceList = (geojsonList) => {
   let distance = 0;
   if (!geojsonList || geojsonList.length < 1) return 0; 
-  geojsonList.map((json) => { distance = distance + parseInt(json.distance) })
+  geojsonList.map((json, i) => { 
+      if (json) {
+        distance = distance + parseInt(json.distance)
+      } else {
+        console.log("no json in " + i, geojsonList);
+      }})
   return distance
 }
