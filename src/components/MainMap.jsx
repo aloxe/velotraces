@@ -4,7 +4,7 @@ import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getBoundingBox, getCenter, getGeoJson, getLength, getListBoundingBox } from "../helpers/gpxUtil";
+import { getBoundingBox, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 
@@ -34,7 +34,7 @@ const MainMap = () => {
     if (step===1) {
       const getGpxListAwaited = async () => {
         try {
-          const response = await axios.get('/api/velotraces/tracks.php?y=2010&c=');
+          const response = await axios.get('/api/velotraces/tracks.php?y=2010');
           setGpxList(response.data)
         } catch (error) {
           console.error('oups Error fetching data:', error.message);
@@ -92,10 +92,12 @@ const MainMap = () => {
         const loadYear = currentYear === 'all' ? '' : currentYear;
         try {
           const response = await axios.get(`/api/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
-          if (response.data.length > 1) {
+          if (response.data.length >= 1) {
             setGpxList(response.data)
             setStep(2)
           } else {
+            setGeojsonList([])
+            setGeojson(null)
             setStep(5)
           }
         } catch (error) {
@@ -109,10 +111,11 @@ const MainMap = () => {
   const handleClickSideBar = (e) => {
     // close popup
     e.target.parentNode.parentNode.nextSibling.style.display = 'none'
+    // get click info
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
     } else if (e.target.innerText === 'all') {
-      setCurrentYear(e.target.innerText)
+      setCurrentYear('')
     } else {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
@@ -170,7 +173,7 @@ const MainMap = () => {
     popEl.children[1].children[0].children[0].innerText = "🚲 " + geojson.title
     popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", geojson.date)
     popEl.children[1].children[0].children[2].innerText = geojson.countries.map(cc => countryCodeToFlag(cc)).join(' ')
-    popEl.children[1].children[0].children[3].innerText = getLength(geojson)+'km' || '';
+    popEl.children[1].children[0].children[3].innerText = geojson.distance+'km' || '';
   }
 
   return (
@@ -188,12 +191,13 @@ const MainMap = () => {
           step={step}
           currentYear={currentYear}
           currentCountry={currentCountry}
+          geojsonList={geojsonList}
           handleClick={handleClickSideBar}
         />
         <Popup key='popup' currentFocus={currentFocus} />
-        { step>=3 && renderGeoJson(geojson, 'prems') }
-        { step===4 && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
-        { step===5 && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
+        { step>=3 && geojson && renderGeoJson(geojson, 'prems') }
+        { step===4 && geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
+        { step===5 && geojsonList && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
 
       </Map>
     </>
