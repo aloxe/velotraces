@@ -4,7 +4,7 @@ import { Map, GeoJson } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getBoundingBox, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
+import { getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 
@@ -41,30 +41,16 @@ const MainMap = () => {
         }
       }
       getGpxListAwaited()
-      setStep(2)
+      setStep(3)
     }
   }, [step]);
-
-  useEffect(() => {
-    if (step===2 && gpxList.length > 0) {
-      const setGeoJsonAwaited = async (url) => {
-        const geojson = await getGeoJson(url)
-        setGeojson(geojson)
-        const bbox = getBoundingBox(geojson)
-        const center = getCenter(bbox)
-        setCenter(center)
-      }
-      setStep(3)
-      setGeoJsonAwaited(gpxList[gpxList.length-1])
-    }
-  }, [step, gpxList, geojson]);
 
   useEffect(() => {
     if (step===3) {
       const setGeoJsonListAwaited = async (gpxList) => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
-          if (i < gpxList.length - 1) {
+          if (i < gpxList.length) {
             const geojson = await getGeoJson(url)
             geojsonList.push(geojson)
             setGeojsonList(geojsonList) 
@@ -75,7 +61,7 @@ const MainMap = () => {
           setGeojsonList(geojsonList)
           const bbox = getListBoundingBox(geojsonList)
           const center = getCenter(bbox)
-          setCenter(center)
+          center && setCenter(center)
           setStep(5) // make sure we are done
         })
       }
@@ -94,7 +80,7 @@ const MainMap = () => {
           const response = await axios.get(`/api/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
           if (response.data.length >= 1) {
             setGpxList(response.data)
-            setStep(2)
+            setStep(3)
           } else {
             setGeojsonList([])
             setGeojson(null)
