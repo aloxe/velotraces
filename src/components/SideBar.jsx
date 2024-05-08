@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import './SideBar.css';
 import { countryCodeToFlag } from '../helpers/countryUtil';
+import { getDistanceList } from '../helpers/gpxUtil';
 
-const text = {
-    1: 'Loading trace list…',
-    2: 'Loading…',
-    3: 'One Done…',
-    4: 'many done…',
-    5: 'All downloaded'
-  };
-
-const SideBar = ({step, currentYear, currentCountry, handleClick}) => { 
+const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) => { 
     const [width, setWidth] = useState('none');
 
     const toggleSideBar = () => {
@@ -32,7 +25,7 @@ const SideBar = ({step, currentYear, currentCountry, handleClick}) => {
         </div>
         <div className={`sidebar ${width}`}>
             {step < 5 ? <div className='rotate'>↻</div>
-            : <div className='status'>{text[step]}</div>}
+            : <div className='status'>{geojsonList.length} tracks<br/>{getDistanceList(geojsonList)}km </div>}
             <h3>years</h3>
             <div className='tags'>
                 {years.map(year => (<button className={`tag ${currentYear === year.toString() && 'select'}`} onClick={handleClick} key={year}>{year}</button>))}
@@ -41,6 +34,9 @@ const SideBar = ({step, currentYear, currentCountry, handleClick}) => {
             <h3>countries</h3>
             <div className='tags flags'>
                 {countries.map(country => (<button className={`tag ${currentCountry === country && 'select'}`} onClick={handleClick}key={country}>{countryCodeToFlag(country)}</button>))}
+            </div>
+            <div className='tags'>
+                
             </div>
         </div>
         </>

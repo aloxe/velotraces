@@ -9,6 +9,7 @@ export const getGeoJson = async (url) => {
     geojson.date = getDate(url)
     geojson.title = getTitle(url)
     geojson.countries = getCountries(url)
+    geojson.distance = getDistance(geojson)
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
@@ -18,6 +19,7 @@ export const getGeoJson = async (url) => {
 
 export function getBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
+  if (!data) return;
 
   for (var i = 0; i < data.features.length; i++) {
     coords = data.features[i].geometry.coordinates;
@@ -83,7 +85,14 @@ export const getCountries = (file) => file.split('.').slice(1, -1)
 
 import lineDistance from "turf-line-distance";
 
-export const getLength = (geojson) => {
-  const length = lineDistance(geojson, 'kilometers');
-  return length.toFixed(2)
+export const getDistance = (geojson) => {
+  const distance = lineDistance(geojson, 'kilometers');
+  return distance.toFixed(2)
+}
+
+export const getDistanceList = (geojsonList) => {
+  let distance = 0;
+  if (!geojsonList || geojsonList.length < 1) return 0; 
+  geojsonList.map((json) => { distance = distance + parseInt(json.distance) })
+  return distance
 }
