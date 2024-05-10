@@ -1,10 +1,15 @@
-// module.exports = {
-//   root: 'src',
-//   build: {
-//     outDir: '../dist'
-//   }
-// }
+import { defineConfig } from 'vite'
 
-export default {
-  // config options
-}
+// https://vitejs.dev/config/
+
+export default defineConfig({
+  server: {
+    proxy: {
+      "/api": {
+        target: 'https://alix.guillard.fr/data/velo/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      }
+    },
+  },
+});
