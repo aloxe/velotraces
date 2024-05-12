@@ -30,14 +30,26 @@ export function getBoundingBox(data) {
 
   for (var i = 0; i < data.features.length; i++) {
     coords = data.features[i].geometry.coordinates;
-
+    const type = data.features[i].geometry.type;
     for (var j = 0; j < coords.length; j++) {
-      longitude = coords[j][0];
-      latitude = coords[j][1];
-      bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
-      bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
-      bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
-      bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+      if(type === "MultiLineString") {
+        for (var k = 0; k < coords[j].length; k++) {
+          longitude = coords[j][k][0];
+          latitude = coords[j][k][1];
+
+           bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+           bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+           bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+           bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+        }
+      } else { // type === "LineString"
+        longitude = coords[j][0];
+        latitude = coords[j][1];
+        bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+        bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+        bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+        bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+      }
     }
   }
   return bounds;
@@ -49,17 +61,45 @@ export function getListBoundingBox(data) {
   for (var h = 0; h < data.length; h++) {
     for (var i = 0; i < data[h].features.length; i++) {
       coords = data[h].features[i].geometry.coordinates;
+      const type = data[h].features[i].geometry.type;
       for (var j = 0; j < coords.length; j++) {
-        longitude = coords[j][0];
-        latitude = coords[j][1];
-        bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
-        bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
-        bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
-        bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+
+        if(type === "MultiLineString") {
+          for (var k = 0; k < coords[j].length; k++) {
+            longitude = coords[j][k][0];
+            latitude = coords[j][k][1];
+
+             bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+             bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+             bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+             bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+          }
+        } else { // type === "LineString"
+          longitude = coords[j][0];
+          latitude = coords[j][1];
+
+          bounds.xMin = bounds.xMin < longitude ? bounds.xMin : longitude;
+          bounds.xMax = bounds.xMax > longitude ? bounds.xMax : longitude;
+          bounds.yMin = bounds.yMin < latitude ? bounds.yMin : latitude;
+          bounds.yMax = bounds.yMax > latitude ? bounds.yMax : latitude;
+        }
       }
     }
   }
   return bounds;
+}
+
+export const getZoom = bbox => {
+  if (!bbox) return;
+  let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+  let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+
+  const resolutionHorizontal = (bbox.xMax - bbox.xMin) / vw;
+  const resolutionVertical = (360 * 40.7436654315252 * (bbox.xMax - bbox.xMin) * 2) / (vh * 256);
+  const  resolution = Math.max(resolutionHorizontal, resolutionVertical)
+
+  const zoom = Math.log(360 / (resolution))+.55
+  return Math.round(zoom);
 }
 
 export const getCenter = bbox => {
