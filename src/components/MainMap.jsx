@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
-import { osm } from 'pigeon-maps/providers'
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
 import { getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
+import { CartoDBVoyager } from "../helpers/tiles";
 
 const MainMap = () => {
   const [step, setStep] = useState(0);
@@ -165,10 +165,10 @@ const MainMap = () => {
   return (
     <>
       <Map
-        provider={osm}
+        provider={CartoDBVoyager.tiles}
         defaultZoom={8}
         zoomSnap={false}
-        attributionPrefix={<>aloxe</>}
+        attributionPrefix={CartoDBVoyager.attribution}
         center={[center.lat, center.lon]}
         zoom={8}
       >
