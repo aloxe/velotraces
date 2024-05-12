@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
+import { getZoom, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 import { CartoDBVoyager } from "../helpers/tiles";
@@ -13,6 +13,7 @@ const MainMap = () => {
   const [gpxList, setGpxList] = useState([]);
   const [geojson, setGeojson] = useState(null);
   const [center, setCenter] = useState({lon:3, lat:50});
+  const [zoom, setZoom] = useState(8);
   const [geojsonList, setGeojsonList] = useState([]);
 
   const [currentYear, setCurrentYear] = useState('2024');
@@ -59,9 +60,11 @@ const MainMap = () => {
         })
         Promise.all(requests).then(() => {
           setGeojsonList(geojsonList)
-          const bbox = getListBoundingBox(geojsonList)
-          const center = getCenter(bbox)
-          center && setCenter(center)
+          if (geojsonList.length) {
+            const bbox = getListBoundingBox(geojsonList)
+            setCenter(getCenter(bbox))
+            setZoom(getZoom(bbox))
+          }
           setStep(5) // make sure we are done
         })
       }
@@ -169,8 +172,8 @@ const MainMap = () => {
         defaultZoom={8}
         zoomSnap={false}
         attributionPrefix={CartoDBVoyager.attribution}
-        center={[center.lat, center.lon]}
-        zoom={8}
+        center={[center.lat || 44, center.lon || 3]}
+        zoom={zoom || 8}
       >
 
         <SideBar 
