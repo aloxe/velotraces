@@ -1,7 +1,44 @@
 import { gpx } from "togeojson";
 import axios from 'axios';
 
-export const getGeoJson = async (url) => {
+export const getGpxList = async () => {
+  try {
+    const response = await axios.get('/api/velotraces/tracks.php');
+    return response.data
+  } catch (error) {
+    console.error('oups Error fetching data:', error.message);
+    return([])
+  }
+}
+
+export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
+  const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
+  const loadYear = currentYear === 'all' ? '' : currentYear;
+  const gpxList = allGpxList.filter(gpx => {
+    const year = getYear(gpx)
+    const Countries = getCountries(gpx)
+    if (!loadCountry) {
+      return year === loadYear
+    }
+    if (!loadYear) {
+      return Countries.includes(loadCountry)
+    }
+    return year === loadYear && Countries.includes(loadCountry)
+  })
+  return gpxList
+}
+
+// export const getGeoJson = async (url, allGeojsonList) => {
+//   console.log("getGeoJson " + allGeojsonList.length);
+//   if (allGeojsonList[url]) {
+//     return allGeojsonList[url];
+//   }
+//   const geojson = await loadGeoJson(url)
+//   allGeojsonList.push({url: geojson})
+//   return geojson;
+// }
+
+export const loadGeoJson = async (url) => {
   try {
     const response = await axios.get('/api/velotraces/allvelotracks/'+url);
     const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
@@ -117,6 +154,11 @@ export const getDate = (file) => {
     array[0] + "-" + array[1] + "-" + array[2] : 
     array[0] + "-" + array[1]
   return fileDate;
+}
+
+export const getYear = (file) => {
+  const fileDate = getDate(file)
+  return fileDate.substring(0,4)
 }
 
 export const getTitle = (file) => {
