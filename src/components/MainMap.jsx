@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import axios from 'axios';
+// import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import SideBar from "./SideBar";
 import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
-import { getZoom, getCenter, getGeoJson, getListBoundingBox } from "../helpers/gpxUtil";
+import { getZoom, getCenter, getListBoundingBox, filterGpxList, getGpxList, loadGeoJson } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import { formatDate } from "../helpers/timeUtil";
 import { CartoDBVoyager } from "../helpers/tiles";
 
 const MainMap = () => {
   const [step, setStep] = useState(0);
+  const [allGpxList, setAllGpxList] = useState([]);
   const [gpxList, setGpxList] = useState([]);
   const [geojson, setGeojson] = useState(null);
   const [center, setCenter] = useState({lon:3, lat:50});
@@ -19,11 +20,11 @@ const MainMap = () => {
   const [currentYear, setCurrentYear] = useState('2024');
   const [currentCountry, setCurrentCountry] = useState('xx');
   const [currentFocus, setCurrentFocus] = useState(null);
-
+  // const allGeojsonList = []
 // TODO use swr
 
   useEffect(() => {
-    // do not load anything do not load on initial render
+    // do not load anything on initial render
     if (step===0) {
       setStep(1)
       const yearNow = new Date().getFullYear()
@@ -34,12 +35,8 @@ const MainMap = () => {
   useEffect(() => {
     if (step===1) {
       const getGpxListAwaited = async () => {
-        try {
-          const response = await axios.get('/api/velotraces/tracks.php?y=2010');
-          setGpxList(response.data)
-        } catch (error) {
-          console.error('oups Error fetching data:', error.message);
-        }
+        const gpxList = await getGpxList()
+        gpxList.length && setAllGpxList(gpxList)
       }
       getGpxListAwaited()
       setStep(3)
@@ -52,7 +49,7 @@ const MainMap = () => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
           if (i < gpxList.length) {
-            const geojson = await getGeoJson(url)
+            const geojson = await loadGeoJson(url)
             geojsonList.push(geojson)
             setGeojsonList(geojsonList) 
             // need to find a way to render on each track
@@ -76,26 +73,17 @@ const MainMap = () => {
 
   useEffect(() => {
     if (step===6) {
-      const getGpxListAwaited = async () => {
-        const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
-        const loadYear = currentYear === 'all' ? '' : currentYear;
-        try {
-          const response = await axios.get(`/api/velotraces/tracks.php?y=${loadYear}&c=${loadCountry}`);
-          if (response.data.length >= 1) {
-            setGpxList(response.data)
-            setStep(3)
-          } else {
-            setGeojsonList([])
-            setGeojson(null)
-            setStep(5)
-          }
-        } catch (error) {
-          console.error('Error fetching gpx list data:', error.message);
-        }
+      const gpsList = filterGpxList(currentYear, currentCountry, allGpxList)
+      if (gpsList.length) {
+        setGpxList(gpsList)
+        setStep(3)
+      } else {
+        setGeojsonList([])
+        setGeojson(null)
+        setStep(5)
       }
-      getGpxListAwaited()
     }
-  }, [step, currentYear, currentCountry]);
+  }, [step, currentYear, currentCountry, allGpxList]);
 
   const handleClickSideBar = (e) => {
     // close popup
