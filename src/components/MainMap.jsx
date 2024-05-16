@@ -16,7 +16,8 @@ const MainMap = () => {
   const [center, setCenter] = useState({lon:3, lat:50});
   const [zoom, setZoom] = useState(8);
   const [geojsonList, setGeojsonList] = useState([]);
-
+  const [allGeojsonList, setAllGeojsonList] = useState([]);
+  
   const [currentYear, setCurrentYear] = useState('2024');
   const [currentCountry, setCurrentCountry] = useState('xx');
   const [currentFocus, setCurrentFocus] = useState(null);
@@ -49,9 +50,13 @@ const MainMap = () => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
           if (i < gpxList.length) {
-            const geojson = await loadGeoJson(url)
+            const geojson = allGeojsonList.find(track => track.url === url) || await loadGeoJson(url)
+            if (!allGeojsonList.find(track => track.url === url)) {
+              geojson["url"] = url;
+              allGeojsonList.push(geojson)
+            }
             geojsonList.push(geojson)
-            setGeojsonList(geojsonList) 
+            setGeojsonList(geojsonList)
             // need to find a way to render on each track
           }
         })
@@ -62,6 +67,7 @@ const MainMap = () => {
             setCenter(getCenter(bbox))
             setZoom(getZoom(bbox))
           }
+          setAllGeojsonList(allGeojsonList)
           setStep(5) // make sure we are done
         })
       }
