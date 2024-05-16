@@ -16,8 +16,6 @@ export function countryCodeToFlag(countrycode) {
 }
 
 export function flagToCountryCode(flag) {
-  if (flag === '🌍') return 'xx' // not a country, used for «all»
-
   const offset = 127397;
   const f = flag.codePointAt(0);
   const s = flag.codePointAt(2);

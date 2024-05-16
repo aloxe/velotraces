@@ -23,7 +23,7 @@
     position: fixed;
     top: 1em;
     left: 1em;
-    padding: 0.2em 0.5em 0.3em;
+    padding: 0.2em 0.4em 0.3em;
     background-color: rgba(250, 255, 240, 0.8);
     border-radius: 5em;
     border: 1px solid grey;
@@ -45,6 +45,11 @@
     font-size: smaller;
 } */
 
+.tags button:disabled {
+    cursor:crosshair;
+    opacity: 0.4;
+}
+
 .tags.flags .tag {
     font-size: 20px;
 }
@@ -60,9 +65,9 @@
 }
 
 .tag.select {
-    border: 1px solid brown;
+    border: 1px solid crimson;
     background-color: white;
-    color: brown;
+    color: crimson;
 }
 
 .status {
