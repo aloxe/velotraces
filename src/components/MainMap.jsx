@@ -93,6 +93,7 @@ const MainMap = () => {
 
   const handleClickSideBar = (e) => {
     // close popup
+    console.log(e.target);
     e.target.parentNode.parentNode.nextSibling.style.display = 'none'
     // get click info
     if (e.target.innerText >= 2010) {
