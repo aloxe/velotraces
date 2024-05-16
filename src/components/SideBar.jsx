@@ -16,7 +16,7 @@ const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) 
     while ( startYear <= yearNow ) {
         years.push(startYear++);
     }   
-    const countries = ['nl', 'be', 'fr', 'de', 'ch', 'at', 'cz', 'pl', 'sk', 'hu', 'it', 'lu', 'si', 'xx']
+    const countries = ['nl', 'be', 'fr', 'de', 'ch', 'at', 'cz', 'pl', 'sk', 'hu', 'it', 'lu', 'si']
 
     return (
         <>
@@ -29,14 +29,12 @@ const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) 
             <h3>years</h3>
             <div className='tags'>
                 {years.map(year => (<button className={`tag ${currentYear === year.toString() && 'select'}`} onClick={handleClick} key={year}>{year}</button>))}
-                <button className={`tag ${currentYear === 'all' && 'select'}`} onClick={handleClick}>all</button>
+                <button className={`tag ${currentYear === '' && 'select'}`} onClick={handleClick} disabled={currentCountry === 'xx'}>all</button>
             </div>
             <h3>countries</h3>
             <div className='tags flags'>
                 {countries.map(country => (<button className={`tag ${currentCountry === country && 'select'}`} onClick={handleClick}key={country}>{countryCodeToFlag(country)}</button>))}
-            </div>
-            <div className='tags'>
-                
+                <button className={`tag ${currentCountry === 'xx' && 'select'}`} onClick={handleClick} disabled={currentYear === ''}>🌍</button>
             </div>
         </div>
         </>
