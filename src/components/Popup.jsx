@@ -1,7 +1,9 @@
+import { countryCodeToFlag } from '../helpers/countryUtil';
+import { formatDate } from '../helpers/timeUtil';
 import './Popup.css';
 
 
-const Popup = ({currentFocus}) => { 
+const Popup = ({currentFocus, geojson}) => { 
 
     const handleClick = (e) => {
         if (currentFocus) {
@@ -19,10 +21,9 @@ const Popup = ({currentFocus}) => {
         <button className="popup-close-button" onClick={handleClick}>×</button>
             <div className='popup-content-wrapper'>
                 <div className='popup-content'>
-                    <div className='popup-title'>🚲 title</div>
-                    <div className='popup-date'>date</div>
-                    <div>pays</div>
-                    <div>stats</div>
+                    <div className='popup-title'>🚲 {geojson?.title || ''}</div>
+                    <div className='popup-date'>{(formatDate(undefined, "ddMMYYYY", geojson?.date) || '') + ' ' + geojson?.countries.map(cc => countryCodeToFlag(cc)).join(' ')}</div>
+                    <div>{`${geojson?.distance}km`}</div>
                 </div>
             </div>
             <div className='popup-tip-container'>
