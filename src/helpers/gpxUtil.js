@@ -175,6 +175,7 @@ export const getCountries = (file) => file.split('.').slice(1, -1)
 import lineDistance from "turf-line-distance";
 
 export const getDistance = (geojson) => {
+  if (!geojson) return 0;
   const distance = lineDistance(geojson, 'kilometers');
   return distance.toFixed(2)
 }
@@ -189,4 +190,48 @@ export const getDistanceList = (geojsonList) => {
         console.error("no json in " + i, geojsonList);
       }})
   return distance
+}
+
+export const getDistElevData = (geojson) => {
+  // TDDO total distance / 20 = gap so we get a small object
+  if (!geojson) return 0;
+  const coordinates = geojson.features[0].geometry.coordinates
+  const data = [];
+  let distance = 0;
+
+  coordinates.map((coord, i) => {
+    if (coordinates[i-1]) {
+      // console.log("=====================");
+      // console.log(coord, i);
+      // console.log("=====================");
+      // console.log("coordinates[i-1][0]", coordinates[i-1][1]);
+      // console.log("coord", coord[1]);
+      distance = distance + distanceInKmBetweenEarthCoordinates(coordinates[i-1][1], coordinates[i-1][0], coord[1], coord[0])
+      // console.log("distance", distance);
+      data.push({"dist": distance, "elev": coord[2]})
+      // console.log({"dist": distance, "elev": coord[2]});
+    }
+  }
+
+  )
+
+}
+
+function degreesToRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+  var earthRadiusKm = 6371;
+
+  var dLat = degreesToRadians(lat2-lat1);
+  var dLon = degreesToRadians(lon2-lon1);
+
+  lat1 = degreesToRadians(lat1);
+  lat2 = degreesToRadians(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return earthRadiusKm * c;
 }

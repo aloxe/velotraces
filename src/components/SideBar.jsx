@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import './SideBar.css';
 import { countryCodeToFlag } from '../helpers/countryUtil';
 import { getDistanceList } from '../helpers/gpxUtil';
+
+import './SideBar.css';
 
 const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) => { 
     const [width, setWidth] = useState('none');

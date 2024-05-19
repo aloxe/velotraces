@@ -21,6 +21,7 @@ const MainMap = () => {
   const [currentYear, setCurrentYear] = useState('2024');
   const [currentCountry, setCurrentCountry] = useState('xx');
   const [currentFocus, setCurrentFocus] = useState(null);
+  const [currentgGeojson, setCurrentGeojson] = useState(null);
   // const allGeojsonList = []
 // TODO use swr
 
@@ -139,13 +140,17 @@ const MainMap = () => {
         el.setAttribute('stroke', 'red');
         el.setAttribute('opacity', '0.5');
       })
+      currentFocus[0].parentNode.parentNode.parentNode.style.zIndex = "0"
     }
     const svgPathArray = [...e.event.target.parentNode.children];
     svgPathArray.map(el => {
       el.setAttribute('stroke', 'blue');
       el.setAttribute('opacity', '1');
     })
+    e.event.target.parentNode.parentNode.parentNode.style.zIndex = "1"
     setCurrentFocus(svgPathArray)
+
+    setCurrentGeojson(geojson);
 
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
     popEl.style.display = 'block';
@@ -178,7 +183,7 @@ const MainMap = () => {
           geojsonList={geojsonList}
           handleClick={handleClickSideBar}
         />
-        <Popup key='popup' currentFocus={currentFocus} />
+        <Popup key='popup' currentFocus={currentFocus} geojson={currentgGeojson} />
         { step>=3 && geojson && renderGeoJson(geojson, 'prems') }
         { step===4 && geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         { step===5 && geojsonList && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }

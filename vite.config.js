@@ -13,5 +13,9 @@ export default defineConfig({
       }
     },
   },
+  
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['react-chartjs-2']
+  }
 });
