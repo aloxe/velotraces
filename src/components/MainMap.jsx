@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 // import axios from 'axios';
 import { Map, GeoJson } from "pigeon-maps"
 import SideBar from "./SideBar";
-import { countryCodeToFlag, flagToCountryCode } from "../helpers/countryUtil";
+import { flagToCountryCode } from "../helpers/countryUtil";
 import { getZoom, getCenter, getListBoundingBox, filterGpxList, getGpxList, loadGeoJson } from "../helpers/gpxUtil";
 import Popup from "./Popup";
-import { formatDate } from "../helpers/timeUtil";
 import { CartoDBVoyager } from "../helpers/tiles";
 
 const MainMap = () => {
@@ -93,8 +92,9 @@ const MainMap = () => {
 
   const handleClickSideBar = (e) => {
     // close popup
-    console.log(e.target);
-    e.target.parentNode.parentNode.nextSibling.style.display = 'none'
+    // e.target.parentNode.parentNode.nextSibling.style.display = 'none'
+    // unset pupup
+    setCurrentFocus(null)
     // get click info
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
@@ -141,11 +141,12 @@ const MainMap = () => {
       })
     }
     const svgPathArray = [...e.event.target.parentNode.children];
+    setCurrentFocus(svgPathArray)
+    setGeojson(geojson)
     svgPathArray.map(el => {
       el.setAttribute('stroke', 'blue');
       el.setAttribute('opacity', '1');
     })
-    setCurrentFocus(svgPathArray)
 
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[2]
     popEl.style.display = 'block';
@@ -154,10 +155,10 @@ const MainMap = () => {
     // popEl.style.left = e.event.clientX - 99+'px'
     // popEl.style.top = e.event.clientY - 108+'px'
 
-    popEl.children[1].children[0].children[0].innerText = "🚲 " + geojson.title
-    popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", geojson.date)
-    popEl.children[1].children[0].children[2].innerText = geojson.countries.map(cc => countryCodeToFlag(cc)).join(' ')
-    popEl.children[1].children[0].children[3].innerText = geojson.distance+'km' || '';
+    // popEl.children[1].children[0].children[0].innerText = "🚲 " + geojson.title
+    // popEl.children[1].children[0].children[1].innerText = formatDate(undefined, "ddMMYYYY", geojson.date)
+    // popEl.children[1].children[0].children[2].innerText = geojson.countries.map(cc => countryCodeToFlag(cc)).join(' ')
+    // popEl.children[1].children[0].children[3].innerText = geojson.distance+'km' || '';
   }
 
   return (
@@ -178,7 +179,7 @@ const MainMap = () => {
           geojsonList={geojsonList}
           handleClick={handleClickSideBar}
         />
-        <Popup key='popup' currentFocus={currentFocus} />
+        {currentFocus && <Popup key='popup' currentFocus={currentFocus} geojson={geojson} />}
         { step>=3 && geojson && renderGeoJson(geojson, 'prems') }
         { step===4 && geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         { step===5 && geojsonList && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
