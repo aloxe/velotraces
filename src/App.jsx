@@ -4,8 +4,7 @@ import './App.css'
 function App() {
   return (
     <div className='App'>
-      {/* <h1>Plop</h1> */}
-    <Wrapper />
+      <Wrapper />
     </div>
   )
 }
