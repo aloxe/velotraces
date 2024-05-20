@@ -28,16 +28,6 @@ export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
   return gpxList
 }
 
-// export const getGeoJson = async (url, allGeojsonList) => {
-//   console.log("getGeoJson " + allGeojsonList.length);
-//   if (allGeojsonList[url]) {
-//     return allGeojsonList[url];
-//   }
-//   const geojson = await loadGeoJson(url)
-//   allGeojsonList.push({url: geojson})
-//   return geojson;
-// }
-
 export const loadGeoJson = async (url) => {
   try {
     const response = await axios.get('/api/velotraces/allvelotracks/'+url);

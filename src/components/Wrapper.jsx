@@ -8,15 +8,10 @@ const Wrapper = () => {
   const [step, setStep] = useState(0);
   const [allGpxList, setAllGpxList] = useState([]);
   const [gpxList, setGpxList] = useState([]);
-  const [geojson, setGeojson] = useState(null);
-//   const [center, setCenter] = useState({lon:3, lat:50});
-//   const [zoom, setZoom] = useState(8);
   const [geojsonList, setGeojsonList] = useState([]);
   const [allGeojsonList, setAllGeojsonList] = useState([]);
-  
   const [currentYear, setCurrentYear] = useState('2024');
   const [currentCountry, setCurrentCountry] = useState('xx');
-//   const [currentFocus, setCurrentFocus] = useState(null);
 
 // TODO use swr
 
@@ -53,7 +48,7 @@ const Wrapper = () => {
             }
             geojsonList.push(geojson)
             setGeojsonList(geojsonList)
-            // need to find a way to render on each track
+            // TODO need to find a way to render on each track
           }
         })
         Promise.all(requests).then(() => {
@@ -76,7 +71,6 @@ const Wrapper = () => {
         setStep(3)
       } else {
         setGeojsonList([])
-        setGeojson(null)
         setStep(5)
       }
     }
@@ -84,7 +78,8 @@ const Wrapper = () => {
 
   const handleClickSideBar = (e) => {
     // close popup
-    // e.target.parentNode.parentNode.nextSibling.style.display = 'none'
+    e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0].style.display = 'none'
+
     // unset pupup
     // setCurrentFocus(null)
 
@@ -109,11 +104,7 @@ const Wrapper = () => {
             geojsonList={geojsonList}
             handleClick={handleClickSideBar}
         />
-        <MainMap 
-            geojson={geojson}
-            geojsonList={geojsonList}
-            className="plopMAINMAPinWRAP"
-        />
+        <MainMap geojsonList={geojsonList} />
     </div>
   );
 }
