@@ -18,7 +18,6 @@ const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) 
     }   
     const countries = ['nl', 'be', 'fr', 'de', 'ch', 'at', 'cz', 'pl', 'sk', 'hu', 'it', 'lu', 'si']
 
-    console.log("RENDER sidebar");
     return (
         <>
         <div className={`bubble ${width}`} onClick={toggleSideBar}>
