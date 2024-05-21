@@ -13,6 +13,7 @@ const MainMap = ({geojsonList}) => {
   const [currentFocus, setCurrentFocus] = useState(null);
 
   useEffect(() => {
+    setCurrentFocus(null)
     if (geojsonList.length) {
       const bbox = getListBoundingBox(geojsonList)
       setCenter(getCenter(bbox))
@@ -73,6 +74,7 @@ const MainMap = ({geojsonList}) => {
     // popEl.style.top = e.event.clientY - 108+'px'
   }
 
+
   return (
     <div className="MapWrapper">
       <Map
@@ -83,10 +85,8 @@ const MainMap = ({geojsonList}) => {
         center={[center.lat || 44, center.lon || 3]}
         zoom={zoom || 8}
       >
-        {/* {<>{geojson?.url}</>} */}
+        { geojsonList && geojsonList.length>=0 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         {currentFocus && <Popup key='popup' currentFocus={currentFocus} geojson={geojson} />}
-        { geojson && renderGeoJson(geojson, 'prems') }
-        { geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
       </Map>
     </div>
   );

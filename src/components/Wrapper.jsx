@@ -78,10 +78,12 @@ const Wrapper = () => {
 
   const handleClickSideBar = (e) => {
     // close popup
-    e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0].style.display = 'none'
+    const PopupEl = e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0]
+    if (PopupEl) {
+      PopupEl.style.display = 'none'
+    }
 
-    // unset pupup
-    // setCurrentFocus(null)
+    // unset currentFocus: done each time geojsonList changes
 
     // get click info
     if (e.target.innerText >= 2010) {
@@ -93,6 +95,7 @@ const Wrapper = () => {
       setCurrentCountry(cc)
     }
     setStep(6)
+    // setClickSideBar(0)
   }
 
   return (
