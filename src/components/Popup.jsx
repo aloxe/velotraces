@@ -1,5 +1,6 @@
 import { countryCodeToFlag } from '../helpers/countryUtil';
 import { formatDate } from '../helpers/timeUtil';
+import Elevation from './Elevation';
 import './Popup.css';
 
 
@@ -23,6 +24,7 @@ const Popup = ({currentFocus, geojson}) => {
                 <div className='popup-content'>
                     <div className='popup-title'>🚲 {geojson?.title || ''}</div>
                     <div className='popup-date'>{(formatDate(undefined, "ddMMYYYY", geojson?.date) || '') + ' ' + geojson?.countries.map(cc => countryCodeToFlag(cc)).join(' ')}</div>
+                    <Elevation geojson={geojson} key="elev" />
                     <div>{`${geojson?.distance}km`}</div>
                 </div>
             </div>

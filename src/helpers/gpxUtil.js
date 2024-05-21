@@ -180,3 +180,49 @@ export const getDistanceList = (geojsonList) => {
       }})
   return distance
 }
+
+export const getDistElevData = (geojson) => {
+  // TDDO total distance / 20 = gap so we get a small object
+  if (!geojson) return 0;
+  const totalDist = getDistance(geojson);
+  const stepSize = Math.round(totalDist/30)
+  const coordinateArray = geojson.features[0].geometry.coordinates
+  // flaten the coordinates nested in array
+  const coordinates = typeof(coordinateArray[0][0]) === "number" ? coordinateArray : coordinateArray.flat(1)
+  const data = [];
+  let distance = 0;
+  let step = 0;
+
+  coordinates.map((coord, i) => {
+    if (coordinates[i-1]) {
+      const gap = distanceInKmBetweenEarthCoordinates(coordinates[i-1][1], coordinates[i-1][0], coord[1], coord[0])
+      distance = distance + gap
+      step = step + gap
+      if (step >= stepSize ) { // keep data every stepSize km only
+        data.push({"dist": distance, "elev": coord[2]})
+        step = 0;
+      }
+    }
+  })
+  return data
+
+}
+
+function degreesToRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+  var earthRadiusKm = 6371;
+
+  var dLat = degreesToRadians(lat2-lat1);
+  var dLon = degreesToRadians(lon2-lon1);
+
+  lat1 = degreesToRadians(lat1);
+  lat2 = degreesToRadians(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return earthRadiusKm * c;
+}
