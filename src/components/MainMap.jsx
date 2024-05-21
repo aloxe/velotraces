@@ -22,6 +22,7 @@ const MainMap = ({geojsonList}) => {
   }, [geojsonList]);
 
   const renderGeoJson = (geojson, key) => {
+    // 
     if (!geojson)  return null;
     return (
       <GeoJson
@@ -38,7 +39,7 @@ const MainMap = ({geojsonList}) => {
             strokeWidth: "3",
             stroke: 'red',
             strokeLinejoin: 'round',
-            opacity: '0.5',
+            opacity: '0.4',
           };
         }}
         onClick={e => handleClick(e, geojson)} 
@@ -51,7 +52,7 @@ const MainMap = ({geojsonList}) => {
     if (currentFocus) {
       currentFocus.map(el => {
         el.setAttribute('stroke', 'red');
-        el.setAttribute('opacity', '0.5');
+        el.setAttribute('opacity', '0.4');
       })
     }
     const svgPathArray = [...e.event.target.parentNode.children];
@@ -74,7 +75,6 @@ const MainMap = ({geojsonList}) => {
     // popEl.style.top = e.event.clientY - 108+'px'
   }
 
-
   return (
     <div className="MapWrapper">
       <Map
@@ -85,8 +85,9 @@ const MainMap = ({geojsonList}) => {
         center={[center.lat || 44, center.lon || 3]}
         zoom={zoom || 8}
       >
-        { geojsonList && geojsonList.length>=0 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
         {currentFocus && <Popup key='popup' currentFocus={currentFocus} geojson={geojson} />}
+        { geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) =>  renderGeoJson(json, i)) }
+        
       </Map>
     </div>
   );
