@@ -79,12 +79,11 @@ const Wrapper = () => {
   const handleClickSideBar = (e) => {
     // close popup
     const PopupEl = e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0]
-    if (PopupEl) {
+    //avoid hiding tracks
+    if (PopupEl && PopupEl.className === "popup-wraper") {
       PopupEl.style.display = 'none'
     }
-
     // unset currentFocus: done each time geojsonList changes
-
     // get click info
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
