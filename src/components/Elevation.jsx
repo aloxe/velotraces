@@ -3,11 +3,11 @@ import { CategoryScale } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { getDistElevData } from "../helpers/gpxUtil";
+import './Elevation.css'
 
 Chart.register(CategoryScale);
 
 const Elevation = ({geojson}) => { 
-
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
