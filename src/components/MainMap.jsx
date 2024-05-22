@@ -8,7 +8,6 @@ import './MainMap.css'
 const MainMap = ({geojsonList}) => {
   const [center, setCenter] = useState({lon:3, lat:50});
   const [zoom, setZoom] = useState(8);
-
   const [geojson, setGeojson] = useState(null);
   const [currentFocus, setCurrentFocus] = useState(null);
 
@@ -88,8 +87,7 @@ const MainMap = ({geojsonList}) => {
         zoom={zoom || 8}
       >
         {currentFocus && <Popup key='popup' currentFocus={currentFocus} geojson={geojson} />}
-        { geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) =>  renderGeoJson(json, i)) }
-        
+        { geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) =>  renderGeoJson(json, i)) }        
       </Map>
     </div>
   );

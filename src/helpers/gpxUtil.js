@@ -82,7 +82,7 @@ function getBoundingBox(data) {
   return bounds;
 }
 
-function getListBoundingBox(data) {
+export function getListBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
 
   for (var h = 0; h < data.length; h++) {
@@ -121,11 +121,10 @@ export const getZoom = geojson => {
   if (!bbox) return;
   let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
   let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-
   const resolutionHorizontal = (bbox.xMax - bbox.xMin) / vw;
-  const resolutionVertical = (360 * 40.7436654315252 * (bbox.xMax - bbox.xMin) * 2) / (vh * 256);
+  const resolutionVertical = (360 * 40.7436654315252 * (bbox.yMax - bbox.yMin) * 2) / (vh * 256);
   const  resolution = Math.max(resolutionHorizontal, resolutionVertical*.6)
-
+  
   const zoom = Math.log(360 / (resolution))
   return Math.floor(zoom);
 }
