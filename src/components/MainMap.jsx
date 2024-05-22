@@ -1,7 +1,7 @@
 import {  useEffect, useState } from "react";
 import { Map, GeoJson } from "pigeon-maps"
 import { CartoDBVoyager } from "../helpers/tiles";
-import { getCenter, getListBoundingBox, getZoom } from "../helpers/gpxUtil";
+import { getCenter, getZoom } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import './MainMap.css'
 
@@ -15,9 +15,8 @@ const MainMap = ({geojsonList}) => {
   useEffect(() => {
     setCurrentFocus(null)
     if (geojsonList.length) {
-      const bbox = getListBoundingBox(geojsonList)
-      setCenter(getCenter(bbox))
-      setZoom(getZoom(bbox))
+      setCenter(getCenter(geojsonList))
+      setZoom(getZoom(geojsonList))
     }
   }, [geojsonList]);
 
@@ -64,6 +63,9 @@ const MainMap = ({geojsonList}) => {
       el.setAttribute('stroke', 'blue');
       el.setAttribute('opacity', '1');
     })
+
+    setCenter(getCenter(geojson))
+    setZoom(getZoom(geojson))
 
     const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0]
     popEl.style.display = 'block';
