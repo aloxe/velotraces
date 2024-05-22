@@ -47,13 +47,11 @@ const Wrapper = () => {
               allGeojsonList.push(geojson)
             }
             geojsonList.push(geojson)
-            setGeojsonList(geojsonList)
-            // TODO need to find a way to render on each track
           }
         })
         Promise.all(requests).then(() => {
-          setGeojsonList(geojsonList)
           setAllGeojsonList(allGeojsonList)
+          setGeojsonList(geojsonList)
           setStep(5) // make sure we are done
         })
       }

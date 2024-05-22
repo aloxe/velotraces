@@ -51,7 +51,7 @@ export const loadGeoJson = async (url) => {
   }
 }
 
-export function getBoundingBox(data) {
+function getBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
   if (!data) return;
 
@@ -82,7 +82,7 @@ export function getBoundingBox(data) {
   return bounds;
 }
 
-export function getListBoundingBox(data) {
+function getListBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
 
   for (var h = 0; h < data.length; h++) {
@@ -116,20 +116,22 @@ export function getListBoundingBox(data) {
   return bounds;
 }
 
-export const getZoom = bbox => {
+export const getZoom = geojson => {
+  const bbox = geojson.length > 1 ? getListBoundingBox(geojson) : getBoundingBox(geojson)
   if (!bbox) return;
   let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
   let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
   const resolutionHorizontal = (bbox.xMax - bbox.xMin) / vw;
   const resolutionVertical = (360 * 40.7436654315252 * (bbox.xMax - bbox.xMin) * 2) / (vh * 256);
-  const  resolution = Math.max(resolutionHorizontal, resolutionVertical)
+  const  resolution = Math.max(resolutionHorizontal, resolutionVertical*.6)
 
-  const zoom = Math.log(360 / (resolution))+.55
-  return Math.round(zoom);
+  const zoom = Math.log(360 / (resolution))
+  return Math.floor(zoom);
 }
 
-export const getCenter = bbox => {
+export const getCenter = geojson => {
+  const bbox = geojson.length > 1 ? getListBoundingBox(geojson) : getBoundingBox(geojson)
   if (!bbox) return;
   return {
     lon: (bbox.xMax + bbox.xMin)/2,
