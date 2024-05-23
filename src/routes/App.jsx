@@ -1,8 +1,11 @@
-import Wrapper from './components/Wrapper'
+// import { useParams } from 'react-router-dom';
+import Wrapper from '../components/Wrapper'
 import './App.css'
 
+
+
 function App() {
-  return (
+    return (
     <div className='App'>
       <Wrapper />
     </div>
