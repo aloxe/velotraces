@@ -3,15 +3,21 @@ import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import { filterGpxList, getGpxList, loadGeoJson } from "../helpers/gpxUtil";
 import MainMap from "./MainMap";
+import { useParams } from "react-router-dom";
+import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
+  const params = useParams();
+  const country = getCountryInParams(params) || ''
+  const year = getYearInParams(params) || ''
+
   const [step, setStep] = useState(0);
   const [allGpxList, setAllGpxList] = useState([]);
   const [gpxList, setGpxList] = useState([]);
   const [geojsonList, setGeojsonList] = useState([]);
   const [allGeojsonList, setAllGeojsonList] = useState([]);
-  const [currentYear, setCurrentYear] = useState('2024');
-  const [currentCountry, setCurrentCountry] = useState('xx');
+  const [currentYear, setCurrentYear] = useState(year);
+  const [currentCountry, setCurrentCountry] = useState(country);
 
 // TODO use swr
 
@@ -19,24 +25,24 @@ const Wrapper = () => {
     // do not load anything on initial render
     if (step===0) {
       setStep(1)
-      const yearNow = new Date().getFullYear()
-      setCurrentYear(yearNow);
     }
   }, [step]);
 
   useEffect(() => {
     if (step===1) {
+      // load list of gpx files
       const getGpxListAwaited = async () => {
         const gpxList = await getGpxList()
         gpxList.length && setAllGpxList(gpxList)
+        setStep(6)
       }
       getGpxListAwaited()
-      setStep(3)
     }
   }, [step]);
 
   useEffect(() => {
     if (step===3) {
+      // load geojson from a list of gpx files
       const setGeoJsonListAwaited = async (gpxList) => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
@@ -55,7 +61,6 @@ const Wrapper = () => {
           setStep(5) // make sure we are done
         })
       }
-
       setStep(4)
       setGeoJsonListAwaited(gpxList)
     }
@@ -63,13 +68,14 @@ const Wrapper = () => {
 
   useEffect(() => {
     if (step===6) {
-      const gpsList = filterGpxList(currentYear, currentCountry, allGpxList)
-      if (gpsList.length) {
-        setGpxList(gpsList)
+      // filter list of gpx files
+      const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
+      if (gpxListFiltered.length) {
+        setGpxList(gpxListFiltered)
         setStep(3)
       } else {
         setGeojsonList([])
-        setStep(5)
+        setStep(5) // done
       }
     }
   }, [step, currentYear, currentCountry, allGpxList]);

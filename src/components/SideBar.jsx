@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { countryCodeToFlag } from '../helpers/countryUtil';
 import { getDistanceList } from '../helpers/gpxUtil';
+// import { countries, years } from '../routes/App.jsx'
 import './SideBar.css';
+import { countries, years } from '../helpers/routerUtils';
 
 const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) => { 
     const [width, setWidth] = useState('none');
@@ -9,14 +11,6 @@ const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) 
     const toggleSideBar = () => {
         width === 'none' ? setWidth('open130') : setWidth('none')
     }
-
-    const yearNow = new Date().getFullYear()
-    const years = [];
-    var startYear = 2010;
-    while ( startYear <= yearNow ) {
-        years.push(startYear++);
-    }   
-    const countries = ['nl', 'be', 'fr', 'de', 'ch', 'at', 'cz', 'pl', 'sk', 'hu', 'it', 'lu', 'si']
 
     return (
         <>
