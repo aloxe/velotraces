@@ -19,6 +19,15 @@ const router = createBrowserRouter(
           }
         }}
       />
+            <Route
+        path="/t/:track?"
+        element={<App />}
+        loader={({ params }) => {
+          return {
+            track: params.track
+          }
+        }}
+      />
     </Route>
   )
 );

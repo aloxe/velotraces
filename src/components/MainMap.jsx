@@ -1,15 +1,19 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Map, GeoJson } from "pigeon-maps"
 import { CartoDBVoyager } from "../helpers/tiles";
 import { getCenter, getZoom } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import './MainMap.css'
+import { useParams } from "react-router-dom";
 
 const MainMap = ({geojsonList}) => {
+  const params = useParams();
+  const track = params.track;
   const [center, setCenter] = useState({lon:3, lat:50});
   const [zoom, setZoom] = useState(8);
   const [geojson, setGeojson] = useState(null);
   const [currentFocus, setCurrentFocus] = useState(null);
+  const [currentGeoJson, setCurrentGeoJson] = useState(track);
 
   useEffect(() => {
     setCurrentFocus(null)
@@ -33,6 +37,14 @@ const MainMap = ({geojsonList}) => {
             // use patch-package to update pigeon-maps 
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
+        if (geojson.url === currentGeoJson) {
+            return {
+              strokeWidth: "4",
+              stroke: 'indigo',
+              strokeLinejoin: 'round',
+              opacity: '1',
+            };
+          }
           return {
             strokeWidth: "3",
             stroke: 'red',
@@ -47,6 +59,9 @@ const MainMap = ({geojsonList}) => {
   };
 
   const handleClick = (e,geojson) => {
+    setCurrentGeoJson(geojson)
+    setGeojson(geojson)
+
     if (currentFocus) {
       currentFocus.map(el => {
         el.setAttribute('stroke', 'red');
