@@ -117,7 +117,7 @@ export function getListBoundingBox(data) {
 }
 
 export const getZoom = geojson => {
-  const bbox = geojson.length > 1 ? getListBoundingBox(geojson) : getBoundingBox(geojson)
+  const bbox = Array.isArray(geojson) ? getListBoundingBox(geojson) : getBoundingBox(geojson)
   if (!bbox) return;
   let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
   let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
@@ -130,7 +130,7 @@ export const getZoom = geojson => {
 }
 
 export const getCenter = geojson => {
-  const bbox = geojson.length > 1 ? getListBoundingBox(geojson) : getBoundingBox(geojson)
+  const bbox = Array.isArray(geojson) ? getListBoundingBox(geojson) : getBoundingBox(geojson)
   if (!bbox) return;
   return {
     lon: (bbox.xMax + bbox.xMin)/2,
