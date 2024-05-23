@@ -19,12 +19,10 @@ const Wrapper = () => {
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
 
-// TODO use swr
-
   useEffect(() => {
     // do not load anything on initial render
     if (step===0) {
-      setStep(1)
+      setStep(1) // > load gpx list
     }
   }, [step]);
 
@@ -34,11 +32,25 @@ const Wrapper = () => {
       const getGpxListAwaited = async () => {
         const gpxList = await getGpxList()
         gpxList.length && setAllGpxList(gpxList)
-        setStep(6)
+        setStep(2) // > filter list
       }
       getGpxListAwaited()
     }
   }, [step]);
+
+  useEffect(() => {
+    if (step===2) {
+      // filter list of gpx files
+      const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
+      if (gpxListFiltered.length) {
+        setGpxList(gpxListFiltered)
+        setStep(3) // > load GeoJsonLists
+      } else {
+        setGeojsonList([])
+        setStep(4) // done
+      }
+    }
+  }, [step, currentYear, currentCountry, allGpxList]);
 
   useEffect(() => {
     if (step===3) {
@@ -58,27 +70,13 @@ const Wrapper = () => {
         Promise.all(requests).then(() => {
           setAllGeojsonList(allGeojsonList)
           setGeojsonList(geojsonList)
-          setStep(5) // make sure we are done
+          setStep(4) // done
         })
       }
-      setStep(4)
+      setStep(4) // done
       setGeoJsonListAwaited(gpxList)
     }
   }, [step, gpxList, allGeojsonList]);
-
-  useEffect(() => {
-    if (step===6) {
-      // filter list of gpx files
-      const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
-      if (gpxListFiltered.length) {
-        setGpxList(gpxListFiltered)
-        setStep(3)
-      } else {
-        setGeojsonList([])
-        setStep(5) // done
-      }
-    }
-  }, [step, currentYear, currentCountry, allGpxList]);
 
   const handleClickSideBar = (e) => {
     // close popup
@@ -97,8 +95,7 @@ const Wrapper = () => {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
     }
-    setStep(6)
-    // setClickSideBar(0)
+    setStep(2) // > filter list
   }
 
   return (
