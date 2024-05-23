@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtil";
-import { filterGpxList, getGpxList, loadGeoJson } from "../helpers/gpxUtil";
+import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
 import MainMap from "./MainMap";
 import { useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
   const params = useParams();
+  const track = params.track;
+  const year = track ? getYear(track) : getYearInParams(params)
   const country = getCountryInParams(params) || ''
-  const year = getYearInParams(params) || ''
 
   const [step, setStep] = useState(0);
   const [allGpxList, setAllGpxList] = useState([]);
