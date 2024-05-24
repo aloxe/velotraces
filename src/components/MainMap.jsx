@@ -13,7 +13,7 @@ const MainMap = ({geojsonList}) => {
   const [zoom, setZoom] = useState(8);
   const [geojson, setGeojson] = useState(null);
   const [currentFocus, setCurrentFocus] = useState(null);
-  const [currentGeoJson, setCurrentGeoJson] = useState(track);
+  const [currentGeoJsonName, setcurrentGeoJsonName] = useState(track);
 
   useEffect(() => {
     setCurrentFocus(null)
@@ -23,11 +23,31 @@ const MainMap = ({geojsonList}) => {
     }
   }, [geojsonList]);
 
+  useEffect(() => {
+    if (geojsonList && currentGeoJsonName) {
+      const focusEl = document.getElementsByClassName("CURRENT");
+      if (focusEl.length >= 1) {
+        const focusArrayChildren = [...focusEl[0].children[0].children[0].children]
+        focusArrayChildren.map(el => {
+          el.setAttribute('stroke', 'green');
+          el.setAttribute('opacity', '1');
+        })
+        const currentGeoJson = geojsonList.find(geojson => geojson.url === currentGeoJsonName)
+        if (currentGeoJson) {
+          setCenter(getCenter(currentGeoJson))
+          setZoom(getZoom(currentGeoJson))
+        }
+      }
+    }
+
+  }, [geojsonList, currentGeoJsonName]);
+
   const renderGeoJson = (geojson, key) => {
     // 
     if (!geojson)  return null;
     return (
       <GeoJson
+      className={geojson.url === currentGeoJsonName && "CURRENT"}
         key={key}
         data={geojson}
         styleCallback={(feature) => {
@@ -37,7 +57,7 @@ const MainMap = ({geojsonList}) => {
             // use patch-package to update pigeon-maps 
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
-        if (geojson.url === currentGeoJson) {
+        if (geojson.url === currentGeoJsonName) {
             return {
               strokeWidth: "4",
               stroke: 'indigo',
@@ -59,10 +79,11 @@ const MainMap = ({geojsonList}) => {
   };
 
   const handleClick = (e,geojson) => {
-    setCurrentGeoJson(geojson)
+    setcurrentGeoJsonName(geojson.url)
     setGeojson(geojson)
 
     if (currentFocus) {
+      console.log("currentFocus", currentFocus);
       currentFocus.map(el => {
         el.setAttribute('stroke', 'red');
         el.setAttribute('opacity', '0.4');
@@ -98,8 +119,8 @@ const MainMap = ({geojsonList}) => {
         defaultZoom={8}
         zoomSnap={false}
         attributionPrefix={CartoDBVoyager.attribution}
-        center={[center.lat || 44, center.lon || 3]}
-        zoom={zoom || 8}
+        center={[center.lat, center.lon]}
+        zoom={zoom}
       >
         {currentFocus && <Popup key='popup' currentFocus={currentFocus} geojson={geojson} />}
         { geojsonList && geojsonList.length>=1 && geojsonList.map((json, i) =>  renderGeoJson(json, i)) }        
