@@ -18,7 +18,7 @@ const SideBar = ({step, currentYear, currentCountry, geojsonList, handleClick}) 
             {width === 'none' ? '»' : '×'}
         </div>
         <div className={`sidebar ${width}`}>
-            {step < 5 ? <div className='rotate'>↻</div>
+            {step < 4 ? <div className='rotate'>↻</div>
             : <div className='status'>{geojsonList.length} tracks<br/>{getDistanceList(geojsonList)}km </div>}
             <h3>years</h3>
             <div className='tags'>
