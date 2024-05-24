@@ -32,14 +32,27 @@ const MainMap = ({geojsonList}) => {
           el.setAttribute('stroke', 'green');
           el.setAttribute('opacity', '1');
         })
+        setCurrentFocus(focusArrayChildren)
         const currentGeoJson = geojsonList.find(geojson => geojson.url === currentGeoJsonName)
+        setGeojson(currentGeoJson)
         if (currentGeoJson) {
           setCenter(getCenter(currentGeoJson))
           setZoom(getZoom(currentGeoJson))
         }
+        const popEl = focusEl[0].parentNode.parentNode.children[1].children[0]
+        popEl.style.display = 'block';
+
+        // observe popup mutations to unset GeoJsonName when hidding popup
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutationRecord) {
+            if (mutationRecord.target.style.display === "none") {
+              setcurrentGeoJsonName(null)
+            }
+          });    
+        });
+        observer.observe(popEl, { attributes : true, attributeFilter : ['style'] });
       }
     }
-
   }, [geojsonList, currentGeoJsonName]);
 
   const renderGeoJson = (geojson, key) => {
@@ -72,44 +85,15 @@ const MainMap = ({geojsonList}) => {
             opacity: '0.4',
           };
         }}
-        onClick={e => handleClick(e, geojson)} 
+        onClick={() => handleClick(geojson)} 
       >
       </GeoJson>
     );
   };
 
-  const handleClick = (e,geojson) => {
+  const handleClick = (geojson) => {
     setcurrentGeoJsonName(geojson.url)
-    setGeojson(geojson)
-
-    if (currentFocus) {
-      console.log("currentFocus", currentFocus);
-      currentFocus.map(el => {
-        el.setAttribute('stroke', 'red');
-        el.setAttribute('opacity', '0.4');
-      })
-    }
-    const svgPathArray = [...e.event.target.parentNode.children];
-    // update track node
-    setCurrentFocus(svgPathArray)
-    // update track data
-    setGeojson(geojson)
-    svgPathArray.map(el => {
-      el.setAttribute('stroke', 'blue');
-      el.setAttribute('opacity', '1');
-    })
-
-    setCenter(getCenter(geojson))
-    setZoom(getZoom(geojson))
-
-    const popEl = e.event.target.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0]
-    popEl.style.display = 'block';
-
-    // we don't attach the popup to the trace
-    // as it would move with the map
-    // TODO make it follow the track
-    // popEl.style.left = e.event.clientX - 99+'px'
-    // popEl.style.top = e.event.clientY - 108+'px'
+    // setGeojson(geojson)
   }
 
   return (
