@@ -4,9 +4,10 @@ import { CartoDBVoyager } from "../helpers/tiles";
 import { getCenter, getZoom } from "../helpers/gpxUtil";
 import Popup from "./Popup";
 import './MainMap.css'
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MainMap = ({geojsonList}) => {
+  const history = useNavigate();
   const params = useParams();
   const track = params.track;
   const [center, setCenter] = useState({lon:3, lat:50});
@@ -93,7 +94,7 @@ const MainMap = ({geojsonList}) => {
 
   const handleClick = (geojson) => {
     setcurrentGeoJsonName(geojson.url)
-    // setGeojson(geojson)
+    history(`/t/${geojson.url}`)
   }
 
   return (
