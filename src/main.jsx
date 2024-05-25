@@ -32,6 +32,36 @@ const router = createBrowserRouter(
   )
 );
 
+
+// ReactDOM.createRoot(document.getElementById('root')).render(
+//   <React.StrictMode>
+//     <BrowserRouter basename="/app">
+//      <Routes>
+//       <Route
+//           path="/:first?/:second?"
+//           element={<App />}
+//           loader={({ params }) => {
+//             return {
+//               country: params.country || '',
+//               year: params.year || ''
+//             }
+//           }}
+//         />
+//         <Route
+//             path="/t/:track?"
+//             element={<App />}
+//             loader={({ params }) => {
+//               return {
+//                 track: params.track
+//               }
+//             }}
+//         />
+//         <Route path="/" element={<App />} />
+//       </Routes>
+//     </BrowserRouter>
+//   </React.StrictMode>,
+// )
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router} />

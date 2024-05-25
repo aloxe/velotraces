@@ -28,11 +28,8 @@ const MainMap = ({geojsonList}) => {
     if (geojsonList && currentGeoJsonName) {
       const focusEl = document.getElementsByClassName("CURRENT");
       if (focusEl.length >= 1) {
+        // if multi path, focus only on first path
         const focusArrayChildren = [...focusEl[0].children[0].children[0].children]
-        focusArrayChildren.map(el => {
-          el.setAttribute('stroke', 'green');
-          el.setAttribute('opacity', '1');
-        })
         setCurrentFocus(focusArrayChildren)
         const currentGeoJson = geojsonList.find(geojson => geojson.url === currentGeoJsonName)
         setGeojson(currentGeoJson)
@@ -74,7 +71,7 @@ const MainMap = ({geojsonList}) => {
         if (geojson.url === currentGeoJsonName) {
             return {
               strokeWidth: "4",
-              stroke: 'indigo',
+              stroke: 'MediumBlue',
               strokeLinejoin: 'round',
               opacity: '1',
             };

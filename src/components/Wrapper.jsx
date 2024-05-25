@@ -3,11 +3,12 @@ import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
 import MainMap from "./MainMap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
   const history = useNavigate();
+  let location = useLocation();
   const params = useParams();
   const track = params.track;
   const year = track ? getYear(track) : getYearInParams(params)
@@ -20,6 +21,15 @@ const Wrapper = () => {
   const [allGeojsonList, setAllGeojsonList] = useState([]);
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
+
+  useEffect(() => {
+    // handle browser nav
+    if (year !== currentYear || country !== currentCountry) {
+      setCurrentYear(year)
+      setCurrentCountry(country)
+      setStep(2) // > filter list
+    }
+  }, [location]);
 
   useEffect(() => {
     // do not load anything on initial render
