@@ -67,7 +67,7 @@ jobs:
           SSH_PORT: ${{ secrets.PORT }}
 
       - name: Copy htaccess to site
-        run: ssh staging "cd ~/domains/test.xn--4lj4bfp6d.eu.org/homes/; cp .htaccess ../public_html/"
+        run: ssh staging "cd ~/domains/test.xn--4lj4bfp6d.eu.org/homes/velotraces/; cp .htaccess ../../public_html/"
 
       - name: Add symlink to the logs
         run: ssh staging "cd ~/domains/test.xn--4lj4bfp6d.eu.org/public_html/; ln -s ../logs logs"
