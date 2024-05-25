@@ -73,6 +73,6 @@ export const getOption = (format) => {
     const hasDash = format.includes("-");
     const locale = lang === "en" ? "en-GB" : lang
     const options = getOption(format);
-    const date = new Date(dateString.replace("-", "/"));
+    const date = new Date(dateString);
     return hasDash ? Intl.DateTimeFormat(locale, options).format(date).replace("/", "-") : Intl.DateTimeFormat(locale, options).format(date)
   }
