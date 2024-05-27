@@ -83,3 +83,8 @@
   @keyframes rotate{
     to{ transform: rotate(360deg); }
   }
+
+  .tags.tiles img {
+    height: 30px;
+    width: 30px;
+  }

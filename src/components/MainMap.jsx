@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { Map, GeoJson } from "pigeon-maps"
-import { CartoDBVoyager } from "../helpers/tiles";
+import * as Tiles from "../helpers/tiles";
 import { getCenter, getZoom } from "../helpers/gpxUtil";
 import Popup from "./Popup";
-import './MainMap.css'
 import { useNavigate, useParams } from "react-router-dom";
+import './MainMap.css'
 
-const MainMap = ({geojsonList}) => {
+const MainMap = ({geojsonList, tileName}) => {
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
   const [center, setCenter] = useState({lon:3, lat:50});
   const [zoom, setZoom] = useState(8);
   const [geojson, setGeojson] = useState(null);
+  const [currentTiles, setCurrentTiles] = useState(Tiles.CartoDBVoyager)
   const [currentFocus, setCurrentFocus] = useState(null);
   const [currentGeoJsonName, setcurrentGeoJsonName] = useState(track);
 
@@ -52,6 +53,10 @@ const MainMap = ({geojsonList}) => {
       }
     }
   }, [geojsonList, currentGeoJsonName]);
+
+  useEffect(() => {
+    setCurrentTiles(Tiles[tileName])
+  }, [tileName]);
 
   const renderGeoJson = (geojson, key) => {
     // 
@@ -97,10 +102,10 @@ const MainMap = ({geojsonList}) => {
   return (
     <div className="MapWrapper">
       <Map
-        provider={CartoDBVoyager.tiles}
+        provider={currentTiles.tiles}
         defaultZoom={8}
         zoomSnap={false}
-        attributionPrefix={CartoDBVoyager.attribution}
+        attributionPrefix={currentTiles.attribution}
         center={[center.lat, center.lon]}
         zoom={zoom}
       >

@@ -21,12 +21,13 @@ const Wrapper = () => {
   const [allGeojsonList, setAllGeojsonList] = useState([]);
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
+  const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
 
   useEffect(() => {
     // handle browser nav
     if (year !== currentYear || country !== currentCountry) {
-      setCurrentYear(year)
-      setCurrentCountry(country)
+      setCurrentYear(year || '')
+      setCurrentCountry(country || 'xx')
       setStep(2) // > filter list
     }
   }, [location]);
@@ -90,6 +91,10 @@ const Wrapper = () => {
     }
   }, [step, gpxList, allGeojsonList]);
 
+  const handleClickTile = (e) => {
+    setCurrentTile(e.target.alt)
+  }
+
   const handleClickSideBar = (e) => {
     // close popup
     const PopupEl = e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0]
@@ -121,10 +126,12 @@ const Wrapper = () => {
             step={step}
             currentYear={currentYear}
             currentCountry={currentCountry}
+            currentTile={currentTile}
             geojsonList={geojsonList}
             handleClick={handleClickSideBar}
+            handleClickTile={handleClickTile}
         />
-        <MainMap geojsonList={geojsonList} />
+        <MainMap geojsonList={geojsonList} tileName={currentTile} />
     </div>
   );
 }

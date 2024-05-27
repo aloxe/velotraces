@@ -2,6 +2,8 @@
 // https://leaflet-extras.github.io/leaflet-providers/preview/
 // tiles mapbox https://www.mapbox.com/api-documentation/#maps
 
+export const tiles = ['CyclOSM', 'mapboxOutdoor', 'esriWorldImagery', 'CartoDBVoyager'];
+
 // CyclOSM
 export const CyclOSM = {
 	tiles: (x, y, z) => {
@@ -29,6 +31,12 @@ export const mapboxStreet = {
 export const mapboxOutdoor = {
 	tiles: (x, y, z) => `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/${z}/${x}/${y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`,
 	attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+}
+
+// ESRI World Satelite
+export const esriWorldImagery = {
+	tiles: (x, y, z) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 }
 
 // ESRI World Physical
