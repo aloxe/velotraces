@@ -32,7 +32,7 @@ const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, h
             </div>
             <h3>tiles</h3>
             <div className='tags tiles'>
-                {tiles.map(tile => (<img src={`${import.meta.env.VITE_BASE_URL}/img/${tile}.png`} key={tile} alt={tile} onClick={handleClickTile} className={`tag ${currentTile === tile && 'select'}`}/>))}
+                {tiles.map(tile => (<img src={`${import.meta.env.VITE_BASE_URL}img/${tile}.png`} key={tile} alt={tile} onClick={handleClickTile} className={`tag ${currentTile === tile && 'select'}`}/>))}
             </div>
         </div>
         </>
