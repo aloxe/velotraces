@@ -3,8 +3,7 @@ import axios from 'axios';
 
 export const getGpxList = async () => {
   try {
-    // const response = await axios.get('/api/velotraces/tracks.php');
-    const response = await axios.get('https://alix.guillard.fr/velotraces/tracks.php');
+    const response = await axios.get('https://alix.guillard.fr/data/velo/tracks.php');
     return response.data
   } catch (error) {
     console.error('oups Error fetching data:', error.message);
@@ -31,8 +30,7 @@ export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
 
 export const loadGeoJson = async (url) => {
   try {
-    // const response = await axios.get('/api/velotraces/allvelotracks/'+url);
-    const response = await axios.get('https://alix.guillard.fr/velotraces/allvelotracks/'+url);
+    const response = await axios.get('https://alix.guillard.fr/data/velo/gpx/'+url);
     const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
     const geojson = gpx(xmlDom)
     
