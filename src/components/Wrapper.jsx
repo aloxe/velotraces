@@ -3,12 +3,11 @@ import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
 import MainMap from "./MainMap";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
   const history = useNavigate();
-  let location = useLocation();
   const params = useParams();
   const track = params.track;
   const year = track ? getYear(track) : getYearInParams(params)
@@ -22,15 +21,6 @@ const Wrapper = () => {
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
   const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
-
-  useEffect(() => {
-    // handle browser nav
-    if (year !== currentYear || country !== currentCountry) {
-      setCurrentYear(year || '')
-      setCurrentCountry(country || 'xx')
-      setStep(2) // > filter list
-    }
-  }, [location]);
 
   useEffect(() => {
     // do not load anything on initial render
@@ -86,7 +76,6 @@ const Wrapper = () => {
           setStep(4) // done
         })
       }
-      setStep(4) // done
       setGeoJsonListAwaited(gpxList)
     }
   }, [step, gpxList, allGeojsonList]);
