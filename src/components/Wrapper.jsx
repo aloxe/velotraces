@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
+  const PREFIX = import.meta.env.VITE_BASE_URL
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
@@ -95,19 +96,19 @@ const Wrapper = () => {
     // get click info
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
-      const url = currentCountry ? `/${currentCountry}/${e.target.innerText}/` : `/${e.target.innerText}/`
-      history(url)
+      const url = currentCountry ? `${currentCountry}/${e.target.innerText}/` : `${e.target.innerText}/`
+      history(PREFIX+url)
     } else if (e.target.innerText === 'all') {
       setCurrentYear('')
-      history(currentCountry)
+      history(PREFIX+currentCountry)
     } else {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
       if (cc !== 'xx') {
-        const url = currentYear ? `/${cc}/${currentYear}/` : `/${cc}/`
-        history(url)
+        const url = currentYear ? `${cc}/${currentYear}/` : `${cc}/`
+        history(PREFIX+url)
       } else {
-        history(currentYear ? `/${currentYear}/` : `/`)
+        history(currentYear ? PREFIX + `${currentYear}/` : PREFIX)
       }
         
     }

@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import './MainMap.css'
 
 const MainMap = ({geojsonList, tileName}) => {
+  const PREFIX = import.meta.env.VITE_BASE_URL
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
@@ -96,7 +97,7 @@ const MainMap = ({geojsonList, tileName}) => {
 
   const handleClick = (geojson) => {
     setcurrentGeoJsonName(geojson.url)
-    history(`/t/${geojson.url}`)
+    history(`${PREFIX}t/${geojson.url}`)
   }
 
   return (
