@@ -1,6 +1,6 @@
 export function countryCodeToFlag(countrycode) {
   if (countrycode?.length !== 2) return;
-  if (countrycode === 'xx') return '🌍' // not a country, used for «all»
+  if (countrycode === '') return '🌍' // not a country, used for «all»
   
   countrycode = countrycode.toUpperCase()
   const offset = 127397;
@@ -16,7 +16,7 @@ export function countryCodeToFlag(countrycode) {
 }
 
 export function flagToCountryCode(flag) {
-  if (flag === "🌍") return "xx" // not a country flag
+  if (flag === "🌍") return 'xx' // not a country flag
   const offset = 127397;
   const f = flag.codePointAt(0);
   const s = flag.codePointAt(2);

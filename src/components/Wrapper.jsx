@@ -3,12 +3,12 @@ import SideBar from "./SideBar";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
 import MainMap from "./MainMap";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
 
 const Wrapper = () => {
+  const PREFIX = import.meta.env.VITE_BASE_URL
   const history = useNavigate();
-  let location = useLocation();
   const params = useParams();
   const track = params.track;
   const year = track ? getYear(track) : getYearInParams(params)
@@ -22,15 +22,6 @@ const Wrapper = () => {
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
   const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
-
-  useEffect(() => {
-    // handle browser nav
-    if (year !== currentYear || country !== currentCountry) {
-      setCurrentYear(year || '')
-      setCurrentCountry(country || 'xx')
-      setStep(2) // > filter list
-    }
-  }, [location]);
 
   useEffect(() => {
     // do not load anything on initial render
@@ -56,14 +47,14 @@ const Wrapper = () => {
       // filter list of gpx files
       const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
       if (gpxListFiltered.length) {
+        setStep(3) // > load GeoJsonLists to map
         setGpxList(gpxListFiltered)
-        setStep(3) // > load GeoJsonLists
       } else {
         setGeojsonList([])
-        setStep(4) // done
+        setStep(4) // done TOD: set message for empty map
       }
     }
-  }, [step, currentYear, currentCountry, allGpxList]);
+  }, [step, currentYear, currentCountry, allGpxList, gpxList, allGeojsonList]);
 
   useEffect(() => {
     if (step===3) {
@@ -86,7 +77,6 @@ const Wrapper = () => {
           setStep(4) // done
         })
       }
-      setStep(4) // done
       setGeoJsonListAwaited(gpxList)
     }
   }, [step, gpxList, allGeojsonList]);
@@ -106,16 +96,21 @@ const Wrapper = () => {
     // get click info
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
-      const url = currentCountry ? `/${currentCountry}/${e.target.innerText}/` : `/${e.target.innerText}/`
-      history(url)
+      const url = currentCountry ? `${currentCountry}/${e.target.innerText}/` : `${e.target.innerText}/`
+      history(PREFIX+url)
     } else if (e.target.innerText === 'all') {
       setCurrentYear('')
-      history(currentCountry)
+      history(PREFIX+currentCountry)
     } else {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
-      const url = currentYear ? `/${cc}/${currentYear}/` : `/${cc}/`
-      history(url)
+      if (cc !== 'xx') {
+        const url = currentYear ? `${cc}/${currentYear}/` : `${cc}/`
+        history(PREFIX+url)
+      } else {
+        history(currentYear ? PREFIX + `${currentYear}/` : PREFIX)
+      }
+        
     }
     setStep(2) // > filter list
   }
