@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { countryCodeToFlag } from '../helpers/countryUtil';
 import { getDistanceList } from '../helpers/gpxUtil';
 import { countries, years } from '../helpers/routerUtils';
-import './SideBar.css';
 import { tiles } from '../helpers/tiles';
+import './SideBar.css';
 
 const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, handleClick, handleClickTile}) => { 
     const [width, setWidth] = useState('none');
@@ -23,7 +23,7 @@ const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, h
             <h3>years</h3>
             <div className='tags'>
                 {years.map(year => (<button className={`tag ${currentYear === year.toString() && 'select'}`} onClick={handleClick} key={year}>{year}</button>))}
-                <button className={`tag ${currentYear === '' && 'select'}`} onClick={handleClick} disabled={currentYear === ''}>all</button>
+                <button className={`tag ${currentYear === '' && 'select'}`} onClick={handleClick} disabled={currentCountry === 'xx'}>all</button>
             </div>
             <h3>countries</h3>
             <div className='tags flags'>

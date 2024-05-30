@@ -56,14 +56,14 @@ const Wrapper = () => {
       // filter list of gpx files
       const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
       if (gpxListFiltered.length) {
+        setStep(3) // > load GeoJsonLists to map
         setGpxList(gpxListFiltered)
-        setStep(3) // > load GeoJsonLists
       } else {
         setGeojsonList([])
-        setStep(4) // done
+        setStep(4) // done TOD: set message for empty map
       }
     }
-  }, [step, currentYear, currentCountry, allGpxList]);
+  }, [step, currentYear, currentCountry, allGpxList, gpxList, allGeojsonList]);
 
   useEffect(() => {
     if (step===3) {
@@ -114,8 +114,13 @@ const Wrapper = () => {
     } else {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
-      const url = currentYear ? `/${cc}/${currentYear}/` : `/${cc}/`
-      history(url)
+      if (cc !== 'xx') {
+        const url = currentYear ? `/${cc}/${currentYear}/` : `/${cc}/`
+        history(url)
+      } else {
+        history(currentYear ? `/${currentYear}/` : `/`)
+      }
+        
     }
     setStep(2) // > filter list
   }
