@@ -87,19 +87,24 @@ const Wrapper = () => {
   const handleClickSideBar = (e) => {
     // close popup
     const PopupEl = e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0]
+    PopupEl && console.log(PopupEl, PopupEl.className);
+    // console.log("do hide");
+    // PopupEl.style.display = 'none'
     //avoid hiding tracks
-    if (PopupEl && PopupEl.className === "popup-wraper") {
-      PopupEl.style.display = 'none'
-    }
+    // if (PopupEl && PopupEl.className === "popup-wraper") {
+    //   console.log("should hide");
+    //   PopupEl.style.display = 'none'
+    // }
     // unset currentFocus: done each time geojsonList changes
     // get click info
+    const contryCode = currentCountry === 'xx' ? '' : currentCountry;
     if (e.target.innerText >= 2010) {
       setCurrentYear(e.target.innerText)
-      const url = currentCountry ? `${currentCountry}/${e.target.innerText}/` : `${e.target.innerText}/`
+      const url = contryCode ? `${contryCode}/${e.target.innerText}/` : `${e.target.innerText}/`
       history(url)
     } else if (e.target.innerText === 'all') {
       setCurrentYear('')
-      history(currentCountry)
+      history(contryCode)
     } else {
       const cc = flagToCountryCode(e.target.innerText)
       setCurrentCountry(cc)
@@ -109,7 +114,6 @@ const Wrapper = () => {
       } else {
         history(currentYear ? `${currentYear}/` : '')
       }
-        
     }
     setStep(2) // > filter list
   }
