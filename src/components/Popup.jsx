@@ -4,18 +4,13 @@ import Elevation from './Elevation';
 import './Popup.css';
 
 
-const Popup = ({currentFocus, geojson}) => { 
+const Popup = ({geojson, handleClickPopup}) => { 
 
-    const handleClick = (e) => {
-        if (currentFocus) {
-            currentFocus.map(el => {
-              el.setAttribute('stroke', 'red');
-              el.setAttribute('opacity', '0.5');
-            })
-          }
-        e.target.parentNode.style.display = 'none'
+    const handleClick = () => {
+        handleClickPopup("close")
     }
 
+    if (!geojson.title) return
     return (
         <>
         <div className='popup-wraper'>

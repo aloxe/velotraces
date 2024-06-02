@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import SideBar from "./SideBar";
-import { flagToCountryCode } from "../helpers/countryUtil";
-import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
-import MainMap from "./MainMap";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
+import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
+import { flagToCountryCode } from "../helpers/countryUtil";
+import SideBar from "./SideBar";
+import MainMap from "./MainMap";
+import Popup from "./Popup";
 
 const Wrapper = () => {
   const history = useNavigate();
@@ -21,6 +22,7 @@ const Wrapper = () => {
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
   const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
+  const [currentGeoJson, setCurrentGeoJson] = useState(null);
 
   useEffect(() => {
     // do not load anything on initial render
@@ -62,9 +64,13 @@ const Wrapper = () => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
           if (i < gpxList.length) {
-            const geojson = allGeojsonList.find(track => track.url === url) || await loadGeoJson(url)
-            if (!allGeojsonList.find(track => track.url === url)) {
+            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJson(url)
+            if (!allGeojsonList.find(json => json.url === url)) {
               geojson["url"] = url;
+              if (url === track) {
+                setCurrentGeoJson(geojson)
+                handleClickPopup("open", geojson)
+              }
               allGeojsonList.push(geojson)
             }
             geojsonList.push(geojson)
@@ -78,24 +84,14 @@ const Wrapper = () => {
       }
       setGeoJsonListAwaited(gpxList)
     }
-  }, [step, gpxList, allGeojsonList]);
+  }, [step, gpxList, allGeojsonList, track]);
 
   const handleClickTile = (e) => {
     setCurrentTile(e.target.alt)
   }
 
   const handleClickSideBar = (e) => {
-    // close popup
-    const PopupEl = e.target.parentNode.parentNode.nextSibling.children[0].children[1].children[0]
-    PopupEl && console.log(PopupEl, PopupEl.className);
-    // console.log("do hide");
-    // PopupEl.style.display = 'none'
-    //avoid hiding tracks
-    // if (PopupEl && PopupEl.className === "popup-wraper") {
-    //   console.log("should hide");
-    //   PopupEl.style.display = 'none'
-    // }
-    // unset currentFocus: done each time geojsonList changes
+    handleClickPopup("close")
     // get click info
     const contryCode = currentCountry === 'xx' ? '' : currentCountry;
     if (e.target.innerText >= 2010) {
@@ -118,6 +114,18 @@ const Wrapper = () => {
     setStep(2) // > filter list
   }
 
+  const handleClickPopup = (label, geoJsonClick = null) => {
+    const focusEl = document.getElementsByClassName("CURRENT");
+
+    if (label === "close") {
+      focusEl?.classList && focusEl.classList.remove("CURRENT")
+      setCurrentGeoJson(null)
+    } else {
+      setCurrentGeoJson(geoJsonClick)
+      history(`/t/${geoJsonClick.url}`)
+    }
+  }
+
   return (
     <div className='wrapper'>
         <SideBar
@@ -129,7 +137,16 @@ const Wrapper = () => {
             handleClick={handleClickSideBar}
             handleClickTile={handleClickTile}
         />
-        <MainMap geojsonList={geojsonList} tileName={currentTile} />
+        <MainMap 
+          geojsonList={geojsonList}
+          tileName={currentTile}
+          handleClickPopup={handleClickPopup}
+          currentGeoJson={currentGeoJson}
+        />
+        {currentGeoJson && <Popup 
+          geojson={currentGeoJson} 
+          handleClickPopup={handleClickPopup} 
+        />}
     </div>
   );
 }
