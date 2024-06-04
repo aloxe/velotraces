@@ -1,4 +1,4 @@
-import { gpx } from "togeojson";
+import { gpx } from "@mapbox/togeojson";
 import axios from 'axios';
 
 export const getGpxList = async () => {
