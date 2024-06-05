@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import { Map, GeoJson } from "pigeon-maps"
+import { Map, GeoJson, Marker } from "pigeon-maps"
 import { osm } from 'pigeon-maps/providers'
 import { gpx } from "togeojson";
 import SideBar from "./SideBar";
@@ -116,32 +116,61 @@ const MainMap = () => {
             return {
               strokeWidth: "2",
               stroke: "red",
-              r: "1",
+              r: "10",
             };
           }}
         />
     );
   };
 
+const geoJsonSample = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [4.5286, 52.224] },
+      properties: { prop0: "value0" },
+    },
+  ],
+};
+
   return (
     <>
       <Map
         provider={osm}
-        defaultCenter={[50.879, 4.6997]}
-        defaultZoom={8}
+        defaultCenter={[52.284, 4.52]}
+        defaultZoom={17}
         zoomSnap={false}
         attributionPrefix={<>aloxe</>}
       >
-
-        <SideBar 
+      <GeoJson
+        data={geoJsonSample}
+        styleCallback={(feature, hover) => {
+          if (feature.geometry.type === "LineString") {
+            return { strokeWidth: "1", stroke: "black" };
+          }
+          return {
+            fill: hover ? "#d4e6ec99" : "red",
+            strokeWidth: "1",
+            stroke: "blue",
+            r: "12",
+          };
+        }}
+      />
+                    <Marker
+        width={80}
+        anchor={[52.285, 4.522]} 
+        color={"green"} 
+      />
+        {/* <SideBar 
           step={step}
           currentYear={currentYear}
           currentCountry={currentCountry}
           handleClick={handleClickSideBar}
-        />
-        { step>=3 && renderGeoJson(geojson, 'prems') }
+        /> */}
+        {/* { step>=3 && renderGeoJson(geojson, 'prems') }
         { step===4 && geojsonList.length>=1 && geojsonList.map((json, i) => renderGeoJson(json, i)) }
-        { step===5 && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) }
+        { step===5 && geojsonList.map((json, i) => renderGeoJson(json, 'comp'+i)) } */}
 
       </Map>
     </>
