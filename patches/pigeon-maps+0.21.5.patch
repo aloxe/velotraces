@@ -1,0 +1,21 @@
+diff --git a/node_modules/pigeon-maps/src/overlays/GeoJson.tsx b/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
+index a35d315..216e961 100644
+--- a/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
++++ b/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
+@@ -1,5 +1,6 @@
+ import React, { CSSProperties, SVGProps, useMemo, useEffect, useState } from 'react'
+ import { PigeonProps, Point } from '../types'
++import { Marker } from 'pigeon-maps/src/overlays/Marker'
+ 
+ interface GeoJsonProps extends PigeonProps {
+   className?: string
+@@ -113,7 +114,8 @@ export function MultiPolygon(props: GeometryProps): JSX.Element {
+ 
+ export function GeometryCollection(props: GeometryProps): JSX.Element {
+   const renderer = {
+-    Point: PointComponent,
++    // Point: PointComponent,
++    Point: Marker,
+     MultiPoint,
+     LineString,
+     MultiLineString,
