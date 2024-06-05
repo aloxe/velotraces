@@ -37,7 +37,7 @@ const MainMap = () => {
   useEffect(() => {
     if (step===1) {
       const getGpxListAwaited = async () => {
-        const response = await fetch(`https://alix.guillard.fr/velotraces/tracks.php?y=2010&c=`);
+        const response = await fetch(`https://alix.guillard.fr/velotraces/tracks.php?y=2011&c=`);
         const data = await response.json();
         setGpxList(data)
       }
@@ -116,7 +116,7 @@ const MainMap = () => {
             return {
               strokeWidth: "2",
               stroke: "red",
-              r: "20",
+              r: "1",
             };
           }}
         />
