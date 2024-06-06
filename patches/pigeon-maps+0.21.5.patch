@@ -1,63 +1,50 @@
 diff --git a/node_modules/pigeon-maps/lib/index.esm.js b/node_modules/pigeon-maps/lib/index.esm.js
-index 6a98674..3d477b7 100644
+index 6a98674..7c8507f 100644
 --- a/node_modules/pigeon-maps/lib/index.esm.js
 +++ b/node_modules/pigeon-maps/lib/index.esm.js
 @@ -1555,6 +1555,7 @@ _defineProperty(Map, "defaultProps", {
  });
  
  function Marker(props) {
-+  console.log("» Marker", props);
++  // console.log("» Marker", props);
    var width = typeof props.width !== 'undefined' ? props.width : typeof props.height !== 'undefined' ? props.height * 29 / 34 : 29;
    var height = typeof props.height !== 'undefined' ? props.height : typeof props.width !== 'undefined' ? props.width * 34 / 29 : 34;
  
-@@ -1646,7 +1647,45 @@ function PointComponent(props) {
+@@ -1636,7 +1637,9 @@ var defaultSvgAttributes = {
+   stroke: 'white',
+   r: '30'
+ };
++
+ function PointComponent(props) {
++  // console.log("» PointComponent", props);
+   var latLngToPixel = props.latLngToPixel;
+   var _props$coordinates = props.coordinates,
+       y = _props$coordinates[0],
+@@ -1646,11 +1649,23 @@ function PointComponent(props) {
        cx = _latLngToPixel[0],
        cy = _latLngToPixel[1];
  
--  return /*#__PURE__*/React.createElement("circle", _objectSpread2({
-+  console.log("☐ pointcomponent with ", props);
-+  console.log("☐ pointcomponent with ", props.svgAttributes);
-+  // console.log("☐» pointcomponent");
++  if (props.svgAttributes?.imagePath) {
++    const path = "M"+cx+","+cy+"c"+props.svgAttributes.imagePath.split(/[c|C|L|l|v|V|h|H](.*)/s)[1]
 +
-+  const newprops = {
-+    width:props.svgAttributes.r,
-+    anchor:[y, x],
-+    color:props.svgAttributes.fill,
-+    hover:true,
-+    latLngToPixel
++    return /*#__PURE__*/React.createElement("path", {
++      d: path,
++      fill: props.svgAttributes?.fill || "#93c0d099",
++      stroke:  props.svgAttributes?.stroke || "white",
++      strokeWidth: props.svgAttributes?.strokeWidth || "1",
++    });
 +  }
-+  const hover=true;
 +
-+  return /*#__PURE__*/React.createElement("svg", {
-+    width: props.svgAttributes.r,
-+    height: undefined,
-+    viewBox: "0 0 61 71",
-+    fill: "none",
-+    xmlns: "http://www.w3.org/2000/svg"
-+  }, /*#__PURE__*/React.createElement("g", {
-+    style: {
-+      pointerEvents: 'auto'
-+    }
-+  }, /*#__PURE__*/React.createElement("path", {
-+    d: "M52 31.5C52 36.8395 49.18 42.314 45.0107 47.6094C40.8672 52.872 35.619 57.678 31.1763 61.6922C30.7916 62.0398 30.2084 62.0398 29.8237 61.6922C25.381 57.678 20.1328 52.872 15.9893 47.6094C11.82 42.314 9 36.8395 9 31.5C9 18.5709 18.6801 9 30.5 9C42.3199 9 52 18.5709 52 31.5Z",
-+    fill: props.svgAttributes.fill,
-+    stroke: "white",
-+    strokeWidth: "2"
-+  }), /*#__PURE__*/React.createElement("circle", {
-+    cx: "30.5",
-+    cy: "30.5",
-+    r: "8.5",
-+    fill: "white",
-+    opacity: hover ? 0.98 : 0.6
-+  })))
-+  
-+  // Marker(newprops);
-+  
-+  /*#__PURE__*/React.createElement("circle", _objectSpread2({
+   return /*#__PURE__*/React.createElement("circle", _objectSpread2({
      cx: cx,
      cy: cy
    }, props.svgAttributes));
-@@ -1710,8 +1749,10 @@ function MultiPolygon(props) {
+ }
++
+ function MultiPoint(props) {
+   return /*#__PURE__*/React.createElement(React.Fragment, null, props.coordinates.map(function (point, i) {
+     return /*#__PURE__*/React.createElement(PointComponent, _objectSpread2(_objectSpread2({}, props), {}, {
+@@ -1710,8 +1725,10 @@ function MultiPolygon(props) {
    }));
  }
  function GeometryCollection(props) {
@@ -68,7 +55,7 @@ index 6a98674..3d477b7 100644
      MultiPoint: MultiPoint,
      LineString: LineString,
      MultiLineString: MultiLineString,
-@@ -1748,6 +1789,7 @@ function GeometryCollection(props) {
+@@ -1748,6 +1765,7 @@ function GeometryCollection(props) {
    });
  }
  function GeoJsonFeature(props) {
@@ -76,7 +63,7 @@ index 6a98674..3d477b7 100644
    var _useState = useState(props.hover || false),
        internalHover = _useState[0],
        setInternalHover = _useState[1];
-@@ -1788,6 +1830,7 @@ function GeoJsonFeature(props) {
+@@ -1788,6 +1806,7 @@ function GeoJsonFeature(props) {
    })));
  }
  function GeoJson(props) {
@@ -85,7 +72,7 @@ index 6a98674..3d477b7 100644
        width = _props$mapState.width,
        height = _props$mapState.height;
 diff --git a/node_modules/pigeon-maps/src/overlays/GeoJson.tsx b/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
-index a35d315..b7239c1 100644
+index a35d315..896d1ee 100644
 --- a/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
 +++ b/node_modules/pigeon-maps/src/overlays/GeoJson.tsx
 @@ -1,5 +1,6 @@
@@ -95,16 +82,7 @@ index a35d315..b7239c1 100644
  
  interface GeoJsonProps extends PigeonProps {
    className?: string
-@@ -46,6 +47,8 @@ interface GeometryProps {
- const defaultSvgAttributes = { fill: '#93c0d099', strokeWidth: '2', stroke: 'white', r: '30' }
- 
- export function PointComponent(props: GeometryProps): JSX.Element {
-+  console.log("PointComponent in Geojson");
-+  
-   const { latLngToPixel } = props
-   const [y, x] = props.coordinates as [number, number]
-   const [cx, cy] = latLngToPixel([x, y])
-@@ -113,7 +116,8 @@ export function MultiPolygon(props: GeometryProps): JSX.Element {
+@@ -113,7 +114,8 @@ export function MultiPolygon(props: GeometryProps): JSX.Element {
  
  export function GeometryCollection(props: GeometryProps): JSX.Element {
    const renderer = {
@@ -114,7 +92,7 @@ index a35d315..b7239c1 100644
      MultiPoint,
      LineString,
      MultiLineString,
-@@ -167,6 +171,8 @@ export function GeoJsonFeature(props: GeoJsonProps): JSX.Element {
+@@ -167,6 +169,8 @@ export function GeoJsonFeature(props: GeoJsonProps): JSX.Element {
      payload: props.feature,
    })
  
@@ -123,7 +101,7 @@ index a35d315..b7239c1 100644
    return (
      <g
        clipRule="evenodd"
-@@ -190,6 +196,8 @@ export function GeoJsonFeature(props: GeoJsonProps): JSX.Element {
+@@ -190,6 +194,8 @@ export function GeoJsonFeature(props: GeoJsonProps): JSX.Element {
  export function GeoJson(props: GeoJsonProps): JSX.Element {
    const { width, height } = props.mapState
  
