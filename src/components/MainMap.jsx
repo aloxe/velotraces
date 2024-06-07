@@ -128,7 +128,7 @@ const geoJsonSample = {
   features: [
     {
       type: "Feature",
-      geometry: { type: "Point", coordinates: [4.5286, 52.224] },
+      geometry: { type: "Point", coordinates: [4.5279, 52.278] },
       properties: { prop0: "value0" },
     },
   ],
@@ -146,25 +146,27 @@ const geoJsonSample = {
       <GeoJson
         data={geoJsonSample}
         styleCallback={(feature, hover) => {
-          if (feature.geometry.type === "LineString") {
-            return { strokeWidth: "1", stroke: "black" };
+          if (feature.geometry.type === "Point") {
+            return {
+              fill: hover ? "crimson" : "lightcoral",
+              stroke: hover ? "black" : "darkred",
+              strokeWidth: "2",
+              r: "10",
+              path: "m 105.18118,144.78341 c 13.88218,-54.900853 47.12626,-20.15307 62.51039,-48.510217 11.48025,-21.161195 -7.88701,-40.52815 -23.30348,-40.545845 -12.98949,-0.01491 -23.75998,5.030014 -31.12524,15.691032 -9.61521,13.917797 -19.289599,24.284596 -8.08167,73.36503 m 32.30707,-76.511091 17.61856,12.899471 -17.30385,13.528373 z"
+              // made with the help of https://codepen.io/leaverou/pen/RmwzKv
+            };
           }
-          return {
-            fill: hover ? "crimson" : "orange",
-            strokeWidth: "4",
-            stroke: "black",
-            r: "12",
-            imagePath: "m 105.18118,144.78341 c 13.88218,-54.900853 47.12626,-20.15307 62.51039,-48.510217 11.48025,-21.161195 -7.88701,-40.52815 -23.30348,-40.545845 -12.98949,-0.01491 -23.75998,5.030014 -31.12524,15.691032 -9.61521,13.917797 -19.289599,24.284596 -8.08167,73.36503 m 32.30707,-76.511091 17.61856,12.899471 -17.30385,13.528373 z"
-            // imagePath: "M52,31.5c0,5.34,-2.82,10.814,-6.989,16.109c-4.144,5.263,-9.392,10.069,-13.835,14.083c-0.384,0.348,-0.968,0.348,-1.352,0c-4.443,-4.014,-9.691,-8.82,-13.835,-14.083c-4.169,-5.295,-6.989,-10.77,-6.989,-16.109c0,-12.929,9.68,-22.5,21.5,-22.5c11.82,0,21.5,9.571,21.5,22.5z"
-            // made with https://codepen.io/leaverou/pen/RmwzKv
-          };
+          return { strokeWidth: "3", stroke: "blue" };
         }}
       />
-                    <Marker
+                    {/* <Marker
         width={80}
         anchor={[52.285, 4.522]} 
         color={"green"} 
-      />
+                    fill: green,
+            strokeWidth: "4",
+            stroke: white",
+      /> */}
         {/* <SideBar 
           step={step}
           currentYear={currentYear}

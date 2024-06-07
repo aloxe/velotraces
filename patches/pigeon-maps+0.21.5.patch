@@ -1,5 +1,5 @@
 diff --git a/node_modules/pigeon-maps/lib/index.esm.js b/node_modules/pigeon-maps/lib/index.esm.js
-index 6a98674..7c8507f 100644
+index 6a98674..cca24c6 100644
 --- a/node_modules/pigeon-maps/lib/index.esm.js
 +++ b/node_modules/pigeon-maps/lib/index.esm.js
 @@ -1555,6 +1555,7 @@ _defineProperty(Map, "defaultProps", {
@@ -20,13 +20,17 @@ index 6a98674..7c8507f 100644
    var latLngToPixel = props.latLngToPixel;
    var _props$coordinates = props.coordinates,
        y = _props$coordinates[0],
-@@ -1646,11 +1649,23 @@ function PointComponent(props) {
+@@ -1646,11 +1649,29 @@ function PointComponent(props) {
        cx = _latLngToPixel[0],
        cy = _latLngToPixel[1];
  
 +  if (props.svgAttributes?.imagePath) {
 +    const path = "M"+cx+","+cy+"c"+props.svgAttributes.imagePath.split(/[c|C|L|l|v|V|h|H](.*)/s)[1]
 +
++    return /*#__PURE__*/React.createElement("path", _objectSpread2({
++      d: path,
++    }, props.svgAttributes));
++    
 +    return /*#__PURE__*/React.createElement("path", {
 +      d: path,
 +      fill: props.svgAttributes?.fill || "#93c0d099",
@@ -34,6 +38,8 @@ index 6a98674..7c8507f 100644
 +      strokeWidth: props.svgAttributes?.strokeWidth || "1",
 +    });
 +  }
++
++
 +
    return /*#__PURE__*/React.createElement("circle", _objectSpread2({
      cx: cx,
@@ -44,7 +50,7 @@ index 6a98674..7c8507f 100644
  function MultiPoint(props) {
    return /*#__PURE__*/React.createElement(React.Fragment, null, props.coordinates.map(function (point, i) {
      return /*#__PURE__*/React.createElement(PointComponent, _objectSpread2(_objectSpread2({}, props), {}, {
-@@ -1710,8 +1725,10 @@ function MultiPolygon(props) {
+@@ -1710,8 +1731,10 @@ function MultiPolygon(props) {
    }));
  }
  function GeometryCollection(props) {
@@ -55,7 +61,7 @@ index 6a98674..7c8507f 100644
      MultiPoint: MultiPoint,
      LineString: LineString,
      MultiLineString: MultiLineString,
-@@ -1748,6 +1765,7 @@ function GeometryCollection(props) {
+@@ -1748,6 +1771,7 @@ function GeometryCollection(props) {
    });
  }
  function GeoJsonFeature(props) {
@@ -63,7 +69,7 @@ index 6a98674..7c8507f 100644
    var _useState = useState(props.hover || false),
        internalHover = _useState[0],
        setInternalHover = _useState[1];
-@@ -1788,6 +1806,7 @@ function GeoJsonFeature(props) {
+@@ -1788,6 +1812,7 @@ function GeoJsonFeature(props) {
    })));
  }
  function GeoJson(props) {

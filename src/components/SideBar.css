@@ -60,9 +60,9 @@
 }
 
 .tag.select {
-    border: 1px solid brown;
+    border: 1px solid darkred;
     background-color: white;
-    color: brown;
+    color: darkred;
 }
 
 .status {
