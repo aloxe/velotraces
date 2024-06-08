@@ -64,13 +64,18 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
     handleClickPopup("open", geojson)
   }
 
+  // const Attribution = dangerouslySetInnerHTML(currentTiles.attribution)
+
+  const attributionPrefix = <><a href="https://pigeon-maps.js.org/" target="_blank" rel="noreferrer noopener">Pigeon-map</a> by <a href="https://alix.guillard.fr/" target="_blank">Alix Guillard</a></>
+
   return (
     <div className="MapWrapper">
       <Map
         provider={currentTiles.tiles}
         defaultZoom={8}
         zoomSnap={false}
-        attributionPrefix={currentTiles.attribution}
+        attribution={<currentTiles.attribution />}
+        attributionPrefix={attributionPrefix}
         center={[center.lat, center.lon]}
         zoom={zoom}
       >
