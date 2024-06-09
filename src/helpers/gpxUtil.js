@@ -44,12 +44,50 @@ export const loadGeoJson = async (url) => {
     geojson.title = getTitle(url)
     geojson.countries = getCountries(url)
     geojson.distance = getDistance(geojson)
+    geojson.slug = geojson.date + toSlug(geojson.title)
+    // save geojson so we don't need gpx after that
+    // uploadJson(geojson) // already done
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
     return
   }
 }
+
+export const uploadJson = async (geodata) => {
+  const body = JSON.stringify(geodata)
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/upload.php', body, {
+    headers: { 'Content-Type': 'application/json' }
+});
+  const { data } = response;
+  if (data.status === 201) {
+    console.log("💾 " + data.title)
+  } else {
+    console.error("💢💢💢 " + data.title + " PAS SAUVÉ")
+  }
+}
+
+
+  // const options = {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: { 'Content-Type': 'application/json' }
+  // }
+
+  // fetch("/api/upload.php", options)
+  // .then(response => response.json())
+  // .then(data => {
+  //     if (data.status === 201)
+  //         console.log("message", "💾 Données " + data.type + " sauvegardées")
+  //     else
+  //     console.error("message", "💢💢 Données " + data.type + " PAS SAUVÉES")
+  // })
+  // .catch(error => {
+  //     console.error(error)
+  //     console.error("message", "💢💢 visites " + data.type + " Pas sauvegardées : " + error)
+  // });
+// }
+
 
 function getBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
@@ -164,6 +202,7 @@ export const getTitle = (file) => {
 export const getCountries = (file) => file.split('.').slice(1, -1)
 
 import lineDistance from "turf-line-distance";
+import { toSlug } from "./strings";
 
 export const getDistance = (geojson) => {
   const distance = lineDistance(geojson, 'kilometers');
