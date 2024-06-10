@@ -1,0 +1,7 @@
+.dropzone {
+    width: 80%;
+    height: 150px;
+    margin: 10px auto;
+    background-color: azure;
+    border: 2px dotted skyblue;
+}

@@ -19,12 +19,21 @@ const router = createBrowserRouter(
           }
         }}
       />
-            <Route
+      <Route
         path="/t/:track?"
         element={<App />}
         loader={({ params }) => {
           return {
             track: params.track
+          }
+        }}
+      />
+      <Route
+        path="/u/:setting"
+        element={<App />}
+        loader={({ params }) => {
+          return {
+            setting: params.setting
           }
         }}
       />
