@@ -67,6 +67,18 @@ export const uploadJson = async (geodata) => {
   }
 }
 
+export const uploadFile = (file, onUploadProgress) => {
+  let formData = new FormData();
+
+  formData.append("file", file);
+
+  return axios.post('https://alix.guillard.fr/data/velo/api/upload.php', formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress,
+  });
+};
 
   // const options = {
   //     method: 'POST',
