@@ -5,3 +5,30 @@
     background-color: azure;
     border: 2px dotted skyblue;
 }
+
+.progress {
+    width: 80%;
+    margin: 2px auto;
+    background: aliceblue;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding: 0;
+    display: flex;
+    height: 12px;
+  }
+  
+  .progress-value {
+    animation: load 3s normal forwards;
+    background: teal;
+    height: 10px;
+    /* width: 0; */
+    font-size: smaller;
+    color: white;
+  }
+  
+  /* @keyframes load {
+    0% { width: 0; }
+    100% { width: 100%; }
+  } */
+  

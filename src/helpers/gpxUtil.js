@@ -46,7 +46,7 @@ export const loadGeoJson = async (url) => {
     geojson.distance = getDistance(geojson)
     geojson.slug = geojson.date + toSlug(geojson.title)
     // save geojson so we don't need gpx after that
-    // uploadJson(geojson) // already done
+    uploadJson(geojson) // already done
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
@@ -56,6 +56,7 @@ export const loadGeoJson = async (url) => {
 
 export const uploadJson = async (geodata) => {
   const body = JSON.stringify(geodata)
+  console.log("uploadJson", body);
   const response = await axios.post('https://alix.guillard.fr/data/velo/api/upload.php', body, {
     headers: { 'Content-Type': 'application/json' }
 });
@@ -68,11 +69,11 @@ export const uploadJson = async (geodata) => {
 }
 
 export const uploadFile = (file, onUploadProgress) => {
+  // const uploadForm = document.getElementById('uploadForm');
   let formData = new FormData();
 
   formData.append("file", file);
-
-  return axios.post('https://alix.guillard.fr/data/velo/api/upload.php', formData, {
+  return axios.post('https://alix.guillard.fr/data/velo/api/uploadfile.php', formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
