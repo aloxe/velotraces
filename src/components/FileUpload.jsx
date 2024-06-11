@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { uploadFile } from "../helpers/gpxUtil";
-// import { getFiles, uploadFile } from "../services/FileUploadService";
 import './FileUpload.css'
 
 const FileUpload = () => {
@@ -9,14 +8,7 @@ const FileUpload = () => {
     const [currentFile, setCurrentFile] = useState(undefined);
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState("");
-
     const [fileInfos, setFileInfos] = useState([]);
-
-    // useEffect(() => {
-    //     getFiles().then((response) => {
-    //       setFileInfos(response.data);
-    //     });
-    // }, []);
 
     const onDrop = (files) => {
         if (files.length > 0) {
@@ -29,7 +21,7 @@ const FileUpload = () => {
     
         setProgress(0);
         setCurrentFile(currentFile);
-    
+
         uploadFile(currentFile, (event) => {
           setProgress(Math.round((100 * event.loaded) / event.total));
         })
@@ -49,28 +41,34 @@ const FileUpload = () => {
         setSelectedFiles(undefined);
       };
 
+      const mystyle = {
+        width: {progress}+'%'
+      };
+
   return (
-    <div>
+  <div>
+      <div className="progress">
+        <div className="progress-value" style={mystyle} >{progress}%</div>
+      </div>
+
+
+
     {currentFile && (
       <div className="progress mb-3">
-        <div
-          className="progress-bar progress-bar-info progress-bar-striped"
-          role="progressbar"
-          aria-valuenow={progress}
-          aria-valuemin="0"
-          aria-valuemax="100"
-          style={{ width: progress + "%" }}
-        >
-          {progress}%
-        </div>
+        <ol style="--length: 5" role="list">
+          <li style="--i: 1">{progress}%</li>
+        </ol>
       </div>
     )}
+
 
     <Dropzone onDrop={onDrop} multiple={false}>
       {({ getRootProps, getInputProps }) => (
         <section>
           <div {...getRootProps({ className: "dropzone" })}>
+          {/* <form id="uploadForm" > */}
             <input {...getInputProps()} />
+          {/* </form> */}
             {selectedFiles && selectedFiles[0].name ? (
               <div className="selected-file">
                 {selectedFiles && selectedFiles[0].name}
