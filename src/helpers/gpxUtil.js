@@ -29,6 +29,7 @@ export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
 }
 
 export const loadGeoJson = async (url) => {
+  console.log("loadGeoJson");
   try {
     const response = await axios.get('https://alix.guillard.fr/data/velo/gpx/'+url);
     const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
@@ -39,6 +40,7 @@ export const loadGeoJson = async (url) => {
       const featuresFiltered = geojson && geojson.features.filter(feature => feature.geometry.type !== "Point");
       geojson.features = featuresFiltered
     }
+    console.log("cleaned " + url);
     // adding metadata
     geojson.date = getDate(url)
     geojson.title = getTitle(url)
@@ -46,7 +48,7 @@ export const loadGeoJson = async (url) => {
     geojson.distance = getDistance(geojson)
     geojson.slug = geojson.date + toSlug(geojson.title)
     // save geojson so we don't need gpx after that
-    uploadJson(geojson) // already done
+    // uploadJson(geojson) // already done
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
@@ -68,39 +70,24 @@ export const uploadJson = async (geodata) => {
   }
 }
 
-export const uploadFile = (file, onUploadProgress) => {
-  // const uploadForm = document.getElementById('uploadForm');
+export const uploadFile = async (file, onUploadProgress) => {
   let formData = new FormData();
-
   formData.append("file", file);
-  return axios.post('https://alix.guillard.fr/data/velo/api/uploadfile.php', formData, {
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/uploadfile.php', formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
     onUploadProgress,
   });
+  const { data } = response;
+  if (data.status === 201) {
+    console.log("💾 " + data.message)
+    return data.name;
+  } else {
+    console.error("💢💢💢 " + data.message + " PAS SAUVÉ")
+    return null;
+  }
 };
-
-  // const options = {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //     headers: { 'Content-Type': 'application/json' }
-  // }
-
-  // fetch("/api/upload.php", options)
-  // .then(response => response.json())
-  // .then(data => {
-  //     if (data.status === 201)
-  //         console.log("message", "💾 Données " + data.type + " sauvegardées")
-  //     else
-  //     console.error("message", "💢💢 Données " + data.type + " PAS SAUVÉES")
-  // })
-  // .catch(error => {
-  //     console.error(error)
-  //     console.error("message", "💢💢 visites " + data.type + " Pas sauvegardées : " + error)
-  // });
-// }
-
 
 function getBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
