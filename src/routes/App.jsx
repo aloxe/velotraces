@@ -11,7 +11,7 @@ function App() {
   const setting = params.setting;
     return (
     <div className='App'>
-      {setting && <><h1>upload</h1><FileUpload /></>}
+      {setting && <FileUpload />}
       {!setting && <Wrapper />}
     </div>
   )
