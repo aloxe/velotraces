@@ -59,15 +59,16 @@ export const loadGeoJson = async (url) => {
 export const uploadJson = async (geodata) => {
   const body = JSON.stringify(geodata)
   console.log("uploadJson", body);
-  const response = await axios.post('https://alix.guillard.fr/data/velo/api/upload.php', body, {
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/uploadjson.php', body, {
     headers: { 'Content-Type': 'application/json' }
 });
   const { data } = response;
-  if (data.status === 201) {
-    console.log("💾 " + data.title)
-  } else {
-    console.error("💢💢💢 " + data.title + " PAS SAUVÉ")
-  }
+  // if (data.status === 201) {
+  //   console.log("💾 " + data.title)
+  // } else {
+  //   console.error("💢💢💢 " + data.title + " PAS SAUVÉ")
+  // }
+  return data;
 }
 
 export const uploadFile = async (file, onUploadProgress) => {

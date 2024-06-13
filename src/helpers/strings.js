@@ -12,7 +12,7 @@ const sansAccent = (str) => {
   }
 
   export const toSlug = (str) => {
-    return sansAccent(str).toLowerCase()
+    return sansAccent(str.trim()).toLowerCase()
       .replace(/[ ._']/g, "-")
       .replace(/[^\w-]+/g, "")
       .replace(/-[-]+/g, "-");
