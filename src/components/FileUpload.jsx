@@ -7,7 +7,6 @@ import { toSlug } from "../helpers/strings";
 // https://www.bezkoder.com/react-hooks-file-upload/
 
 const FileUpload = () => {
-    const [selectedFiles, setSelectedFiles] = useState(undefined);
     const [currentGpx, setcurrentGpx] = useState(undefined);
     const [currentName, setcurrentName] = useState(undefined);
     const [currentGeoJson, setCurrentGeoJson] = useState(undefined);
@@ -30,7 +29,6 @@ const FileUpload = () => {
     }, [currentName]);
 
     useEffect(() => {
-      console.log("useEffect", currentGeoJson);
       if (currentGeoJson) {
         setForm({
           date: currentGeoJson.date,
@@ -40,27 +38,28 @@ const FileUpload = () => {
       }
     }, [currentGeoJson]);
 
-    const onDrop = (files) => {
-        if (files.length > 0) {
-            setSelectedFiles(files);
-        }
-    };
-
-    const uploadgpx = async () => {
-        let currentGpx = selectedFiles[0];
-    
+    useEffect(() => {
+      const uploadgpx = async () => {
         setProgress(0);
-        setcurrentGpx(currentGpx);
-
         const fileName = await uploadFile(currentGpx, (event) => {
           setProgress(Math.round((100 * event.loaded) / event.total));
         })
             setcurrentName(fileName)
       };
 
+      if (currentGpx) {
+        uploadgpx();
+      }
+    }, [currentGpx]);
+
+    const onDrop = (files) => {
+        if (files.length > 0) {
+          setcurrentGpx(files[0]);
+        }
+    };
+
       const uploadjson = async () => {
         console.log("CLICK!");
-        console.log("form", form);
         console.log("geojson", currentGeoJson);
         // geojson.date = getDate(url)
         // geojson.title = getTitle(url)
@@ -69,45 +68,37 @@ const FileUpload = () => {
         // geojson.slug = geojson.date + toSlug(geojson.title)
       };
 
-      // const mystyle(progress) = {
-      //   width: {progress}+'%',
-      //   background: "red",
-      // };
+      const updateName = async (e) => {
+        const i = e.target.name;
+        let newFeatures = currentGeoJson.features
+        newFeatures[i].properties.name = e.target.value;
+        setCurrentGeoJson({...currentGeoJson, features: newFeatures})
+      }
 
-  return (
+      return (
   <div>
-      {currentGpx && (<div className="progress">
-        <div className="progress-value" style={{width: `${progress}%`}} >{progress}%</div>
-      </div>)}
-
 
     <Dropzone onDrop={onDrop} multiple={false}>
       {({ getRootProps, getInputProps }) => (
         <section>
           <div {...getRootProps({ className: "dropzone" })}>
-          {/* <form id="uploadForm" > */}
             <input {...getInputProps()} />
-          {/* </form> */}
-            {selectedFiles && selectedFiles[0].name ? (
+            {currentGpx && currentGpx.name ? (
               <div className="selected-file">
-                {selectedFiles && selectedFiles[0].name}
+                {currentGpx.name}
               </div>
             ) : (
-              "Drag and drop file here, or click to select file"
+              <div className="selected-file">
+               Upload GPX
+            </div>
             )}
           </div>
-          <aside className="selected-file-wrapper">
-            <button
-              className="btn btn-success"
-              disabled={!selectedFiles}
-              onClick={uploadgpx}
-            >
-              Upload GPX
-            </button>
-          </aside>
         </section>
       )}
     </Dropzone>
+    {currentGpx && (<div className="progress centered">
+      <div className="progress-value " style={{width: `${progress}%`}} >{progress}%</div>
+    </div>)}
 
     {currentGeoJson && <div className="card">
         <form>
@@ -140,10 +131,17 @@ const FileUpload = () => {
        </form>
        <div><b>Filename:</b> {`${form.date}-${form.title && toSlug(form.title.trim())}${form.countries.map(cc=>`.${cc}`).join('')}.json`}      
        </div>
+       {<form>
+       {currentGeoJson.features.length > 1 && currentGeoJson.features.map((feat,i) => {
+        return (<label key={i}>{feat.properties.time}:
+          <input type="text" name={i} value={feat.properties.name} onChange={updateName} />
+        </label>)
+       })}
+       </form>}
        <aside className="selected-file-wrapper">
             <button
               className="btn btn-success"
-              disabled={!selectedFiles}
+              disabled={!currentGeoJson}
               onClick={uploadjson}
             >
               Upload GeoJson
