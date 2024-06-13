@@ -15,15 +15,15 @@ if (isset($type) && isset($slug)) {
         $fp = fopen($filename, "w") or die("Données non écrites");
         $write = fwrite($fp, $encodedJSON);
 
-        $data = array('status' => 201, 'message' => '🐝 File written \o/ ('.$filename.')', 'title' => $title);
+        $data = array('status' => 201, 'message' => '🐝 File written', 'title' => $title, 'filename' => $filename);
 
         fclose($fp);
         chmod($filename, 0777);
     } else {
-        $data = array("status"=> '0', "message"=> '☹ File NOT written (wrong type) '.$slug);
+        $data = array("status"=> '0', "message"=> '🐛 File NOT written (wrong type) '.$slug);
     }
 } else {
-    $data = array("status"=> '0', "message"=> '☹ File NOT written :o( '.$slug);
+    $data = array("status"=> '0', "message"=> '🐛 File NOT written '.$slug);
 }
 
 echo json_encode($data);

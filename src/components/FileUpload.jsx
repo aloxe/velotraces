@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
-import { loadGeoJson, uploadFile } from "../helpers/gpxUtil";
-import './FileUpload.css'
+import {getDistance, loadGeoJson, uploadFile, uploadJson } from "../helpers/gpxUtil";
 import { toSlug } from "../helpers/strings";
+import './FileUpload.css'
+
 
 // https://www.bezkoder.com/react-hooks-file-upload/
 
@@ -11,7 +12,7 @@ const FileUpload = () => {
     const [currentName, setcurrentName] = useState(undefined);
     const [currentGeoJson, setCurrentGeoJson] = useState(undefined);
     const [progress, setProgress] = useState(0);
-
+    const [message, setMessage] = useState("")
     const [form, setForm] = useState({
       date: '',
       title: '',
@@ -44,7 +45,12 @@ const FileUpload = () => {
         const fileName = await uploadFile(currentGpx, (event) => {
           setProgress(Math.round((100 * event.loaded) / event.total));
         })
-            setcurrentName(fileName)
+        if (fileName) {
+          setcurrentName(fileName)
+          setMessage(`💾 ${fileName} téléversé`)
+        } else {
+          setMessage('💢💢💢 PAS SAUVÉ')
+        } 
       };
 
       if (currentGpx) {
@@ -59,13 +65,20 @@ const FileUpload = () => {
     };
 
       const uploadjson = async () => {
-        console.log("CLICK!");
-        console.log("geojson", currentGeoJson);
-        // geojson.date = getDate(url)
-        // geojson.title = getTitle(url)
-        // geojson.countries = getCountries(url)
-        // geojson.distance = getDistance(geojson)
-        // geojson.slug = geojson.date + toSlug(geojson.title)
+        currentGeoJson.date = form.date;
+        currentGeoJson.title = form.title;
+        currentGeoJson.countries = form.countries;
+        currentGeoJson.distance = getDistance(currentGeoJson)
+        currentGeoJson.slug = `${currentGeoJson.date}-${toSlug(currentGeoJson.title)}`
+        const saved = await uploadJson(currentGeoJson)
+        if (saved.status === 201) {
+          setMessage(`💾 ${saved.filename}`)
+        } else {
+          setMessage(`💢💢💢 ${saved.filename} PAS SAUVÉ`)
+        }
+        setcurrentGpx(null)
+        setcurrentName("")
+        setCurrentGeoJson(null)
       };
 
       const updateName = async (e) => {
@@ -92,6 +105,10 @@ const FileUpload = () => {
                Upload GPX
             </div>
             )}
+            {message && (
+              <div className="message">
+                {message}
+              </div>)}
           </div>
         </section>
       )}
