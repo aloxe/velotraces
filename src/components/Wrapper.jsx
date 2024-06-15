@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
-import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
+import { filterGpxList, getGpxList, getYear, loadGeoJsonFromGpx } from "../helpers/gpxUtil";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import SideBar from "./SideBar";
 import MainMap from "./MainMap";
@@ -64,7 +64,7 @@ const Wrapper = () => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
           if (i < gpxList.length) {
-            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJson(url)
+            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJsonFromGpx(url)
             if (!allGeojsonList.find(json => json.url === url)) {
               geojson["url"] = url;
               if (url === track) {
