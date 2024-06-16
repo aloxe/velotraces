@@ -3,9 +3,11 @@ import { countryCodeToFlag } from '../helpers/countryUtil';
 import { getDistanceList } from '../helpers/gpxUtil';
 import { countries, years } from '../helpers/routerUtils';
 import { tiles } from '../helpers/tiles';
+import Login from './Login';
+
 import './SideBar.css';
 
-const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, handleClick, handleClickTile}) => { 
+const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, handleClick, handleClickTile, isLogged, setIsLogged }) => { 
     const [width, setWidth] = useState('none');
 
     const toggleSideBar = () => {
@@ -33,6 +35,9 @@ const SideBar = ({step, currentYear, currentCountry, currentTile, geojsonList, h
             <h3>tiles</h3>
             <div className='tags tiles'>
                 {tiles.map(tile => (<img src={`${import.meta.env.VITE_BASE_URL}img/${tile}.png`} key={tile} alt={tile} onClick={handleClickTile} className={`tag ${currentTile === tile && 'select'}`}/>))}
+            </div>
+            <div className='tags tiles'>
+                <Login isLogged={isLogged} setIsLogged={setIsLogged} />
             </div>
         </div>
         </>

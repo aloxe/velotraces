@@ -1,7 +1,5 @@
 <?php
-
 $name = $_FILES['file']['name'];
-
 
 if (substr($name, -4, 4) == ".gpx") {
   // temporarly follow naming scheme on gpx

@@ -1,0 +1,43 @@
+
+form.login {
+    margin:0;
+    padding: 0;
+    width: 100%;
+  }
+
+  form.login label {
+    cursor: pointer;
+    z-index: 100;
+    padding: 0 10px 0 3px;
+    background-color: rgba(250, 255, 240, 0.8);
+    border-radius: 5em;
+    border: 1px solid grey;
+    width: 0.7em;
+    transition: 0.5s;
+    display: flex;
+    flex-direction: row;
+    font-size: medium;
+    margin-right: 3px;
+}
+
+form.login label span {
+    vertical-align: middle;
+    padding: 0.2em 0.16em 0.3em;
+}
+
+form.login label.velo {
+    font-size: smaller;
+    width: 0.9em;
+    padding-left: 3px;
+}
+
+form.login input {
+    width: 7em;
+    background: transparent;
+    border: 0;
+    display: none;
+}
+form.login input:focus {
+    border: 0;
+    outline: none;
+}

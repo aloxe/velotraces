@@ -12,7 +12,11 @@
     text-align: left;
   }
 
-.sidebar.open130 {
+  .inline {
+    display: flex;
+  }
+
+  .sidebar.open130 {
     width: 130px;
     padding: 1em;
 }
