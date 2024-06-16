@@ -46,9 +46,14 @@ section {
     100% { width: 100%; }
   }
   
-  form {
+  .card {
     width: 80%;
-    margin: 10px auto;
+    margin: 0 auto;
+    padding: 5px;
+  }
+
+  form {
+    margin: 5px auto 10px;
     text-align: left;
   }
 
@@ -61,13 +66,14 @@ section {
   }
 
   form input.date {
-    width: 100px;
+    width: 80px;
   }
   form input.title {
-    width: 300px;
+    width: 50vw;
+    min-width: 250px;
   }
   form input.countries {
-    width: 80px;
+    width: 50px;
   }
 
   form + div {
@@ -75,4 +81,11 @@ section {
     text-align: left;
     width: 80%;
     margin: 0 auto;
+  }
+
+  .upload .footer {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 200px;
   }

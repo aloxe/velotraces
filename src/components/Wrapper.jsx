@@ -7,7 +7,7 @@ import SideBar from "./SideBar";
 import MainMap from "./MainMap";
 import Popup from "./Popup";
 
-const Wrapper = () => {
+const Wrapper = ({ isLogged, setIsLogged }) => {
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
@@ -136,6 +136,8 @@ const Wrapper = () => {
             geojsonList={geojsonList}
             handleClick={handleClickSideBar}
             handleClickTile={handleClickTile}
+            isLogged={isLogged}
+            setIsLogged={setIsLogged} 
         />
         <MainMap 
           geojsonList={geojsonList}

@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import {getDistance, loadGeoJsonFromGpx, renameGpx, uploadFile, uploadJson } from "../helpers/gpxUtil";
 import { toSlug } from "../helpers/strings";
+import Login from "./Login";
 import './FileUpload.css'
 
 
-// https://www.bezkoder.com/react-hooks-file-upload/
-
-const FileUpload = () => {
+const FileUpload = ({ isLogged, setIsLogged }) => {
     const [currentGpx, setCurrentGpx] = useState(undefined);
     const [currentName, setCurrentName] = useState(undefined);
     const [currentGeoJson, setCurrentGeoJson] = useState(undefined);
@@ -90,9 +89,9 @@ const FileUpload = () => {
       }
 
       return (
-  <div>
+  <div className="upload">
 
-    <Dropzone onDrop={onDrop} multiple={false}>
+    {isLogged && <Dropzone onDrop={onDrop} multiple={false}>
       {({ getRootProps, getInputProps }) => (
         <section>
           <div {...getRootProps({ className: "dropzone" })}>
@@ -113,7 +112,8 @@ const FileUpload = () => {
           </div>
         </section>
       )}
-    </Dropzone>
+    </Dropzone>}
+
     {currentGpx && (<div className="progress centered">
       <div className="progress-value " style={{width: `${progress}%`}} >{progress}%</div>
     </div>)}
@@ -166,7 +166,11 @@ const FileUpload = () => {
             </button>
         </aside>   
       </div>}
+  <div className='footer'>
+      <Login isLogged={isLogged} setIsLogged={setIsLogged} />
   </div>
+  </div>
+
   );
 };
 
