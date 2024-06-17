@@ -6,11 +6,13 @@ import { flagToCountryCode } from "../helpers/countryUtil";
 import SideBar from "./SideBar";
 import MainMap from "./MainMap";
 import Popup from "./Popup";
+import FileUpload from '../components/FileUpload';
 
 const Wrapper = ({ isLogged, setIsLogged }) => {
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
+  const setting = params.setting;
   const year = track ? getYear(track) : getYearInParams(params)
   const country = getCountryInParams(params) || ''
 
@@ -128,7 +130,7 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
 
   return (
     <div className='wrapper'>
-        <SideBar
+        {!setting && <SideBar
             step={step}
             currentYear={currentYear}
             currentCountry={currentCountry}
@@ -138,7 +140,7 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
             handleClickTile={handleClickTile}
             isLogged={isLogged}
             setIsLogged={setIsLogged} 
-        />
+        />}
         <MainMap 
           geojsonList={geojsonList}
           tileName={currentTile}
@@ -148,6 +150,11 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
         {currentGeoJson && <Popup 
           geojson={currentGeoJson} 
           handleClickPopup={handleClickPopup} 
+        />}
+        {setting && <FileUpload 
+          isLogged={isLogged} 
+          setIsLogged={setIsLogged}
+          setGeojsonList={setGeojsonList}
         />}
     </div>
   );

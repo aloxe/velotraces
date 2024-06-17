@@ -6,7 +6,7 @@ import Login from "./Login";
 import './FileUpload.css'
 
 
-const FileUpload = ({ isLogged, setIsLogged }) => {
+const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     const [currentGpx, setCurrentGpx] = useState(undefined);
     const [currentName, setCurrentName] = useState(undefined);
     const [currentGeoJson, setCurrentGeoJson] = useState(undefined);
@@ -22,6 +22,7 @@ const FileUpload = ({ isLogged, setIsLogged }) => {
       const getGeoJsonAwaited = async (name) => {
         const geojson = await loadGeoJsonFromGpx(name);
         setCurrentGeoJson(geojson);
+        setGeojsonList([geojson])
       }
       if (currentName) {
         getGeoJsonAwaited(currentName)
