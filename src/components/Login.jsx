@@ -52,11 +52,12 @@ const Login = ({ isLogged, setIsLogged }) => {
         <form onSubmit={onLogin} className='login'>
         {!isLogged && 
             <>
-                <label name="profile" onClick={loginExpand}>
+                <label name="profile" onClick={loginExpand} style={{width: "0.7em"}}>
                     <span>♙</span>
                     <input type="text" className="login" name="login" 
-                value={login} 
-                onChange={e => {setLogin(e.target.value);}}/>
+                    value={login}
+                    style={{display: "none"}}
+                    onChange={e => {setLogin(e.target.value);}} />
                 </label>
             </>
         }
