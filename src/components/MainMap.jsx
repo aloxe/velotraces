@@ -39,6 +39,14 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             // use patch-package to update pigeon-maps 
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
+        if (geojson.color === "rainbow") {
+          return {
+            strokeWidth: "2",
+            stroke: feature.properties.color,
+            strokeLinejoin: 'round',
+            opacity: '0.8',
+          };
+        }
         if (geojson.url === currentGeoJson?.url) {
             return {
               strokeWidth: "4",
@@ -54,7 +62,7 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             opacity: '0.4',
           };
         }}
-        onClick={() => handleClick(geojson)} 
+        onClick={() => !geojson.color && handleClick(geojson)} 
       >
       </GeoJson>
     );
