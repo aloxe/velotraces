@@ -9,11 +9,29 @@ const sansAccent = (str) => {
     str = str.replace("ß", "ss");
     str = str.replace("ẞ", "SS");
     return str;
-  }
+}
 
-  export const toSlug = (str) => {
-    return sansAccent(str.trim()).toLowerCase()
-      .replace(/[ ._']/g, "-")
-      .replace(/[^\w-]+/g, "")
-      .replace(/-[-]+/g, "-");
-  }
+export const toSlug = (str) => {
+  return sansAccent(str.trim()).toLowerCase()
+    .replace(/[ ._']/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/-[-]+/g, "-");
+}
+
+export const colorRainbow = [
+  'red',
+  'maroon',
+  'brown',
+  'tan',
+  'orange',
+  'peach',
+  'yellow',
+  'lime',
+  'olive',
+  'green',
+  'teal',
+  'cyan',
+  'blue',
+  'navy',
+  'purple'
+]
