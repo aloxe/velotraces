@@ -12,7 +12,11 @@
     text-align: left;
   }
 
-.sidebar.open130 {
+  .inline {
+    display: flex;
+  }
+
+  .sidebar.open130 {
     width: 130px;
     padding: 1em;
 }
@@ -57,7 +61,7 @@
 .tag {
     margin: 2px;
     padding: 2px;
-    border: 1px solid grey;
+    border: 1px solid lightsteelblue;
     background-color: transparent;
     display: inline-flex;
     cursor: pointer;

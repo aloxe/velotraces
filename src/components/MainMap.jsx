@@ -39,6 +39,14 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             // use patch-package to update pigeon-maps 
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
+        if (geojson.color === "rainbow") {
+          return {
+            strokeWidth: "2",
+            stroke: feature.properties.color,
+            strokeLinejoin: 'round',
+            opacity: '0.8',
+          };
+        }
         if (geojson.url === currentGeoJson?.url) {
             return {
               strokeWidth: "4",
@@ -54,7 +62,7 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             opacity: '0.4',
           };
         }}
-        onClick={() => handleClick(geojson)} 
+        onClick={() => !geojson.color && handleClick(geojson)} 
       >
       </GeoJson>
     );
@@ -64,13 +72,18 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
     handleClickPopup("open", geojson)
   }
 
+  // const Attribution = dangerouslySetInnerHTML(currentTiles.attribution)
+
+  const attributionPrefix = <><a href="https://pigeon-maps.js.org/" target="_blank" rel="noreferrer noopener">Pigeon-map</a> by <a href="https://alix.guillard.fr/" target="_blank">Alix Guillard</a></>
+
   return (
     <div className="MapWrapper">
       <Map
         provider={currentTiles.tiles}
         defaultZoom={8}
         zoomSnap={false}
-        attributionPrefix={currentTiles.attribution}
+        attribution={<currentTiles.attribution />}
+        attributionPrefix={attributionPrefix}
         center={[center.lat, center.lon]}
         zoom={zoom}
       >

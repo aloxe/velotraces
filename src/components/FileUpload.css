@@ -1,0 +1,94 @@
+.upload {
+  position: absolute;
+  top: 0;
+  width: 75vw;
+  max-height: 80vh;
+  padding: 1em;
+}
+
+.upload .footer {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 200px;
+}
+
+.dropzone {
+    height: 100px;
+    margin: 0 auto;
+    background-color: azure;
+    border: 2px dotted skyblue;
+}
+
+.dropzone:hover {
+  background-color: whitesmoke;
+  border: 2px solid skyblue;
+}
+
+.selected-file {
+  margin-top: 40px;
+  font-weight: 500;
+}
+
+.progress {
+    margin: 2px auto;
+    margin-top: -5px;
+    width: calc(100% + 1px);
+    background: aliceblue;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding: 0;
+    display: flex;
+    height: 7px;
+  }
+  
+  .progress-value {
+    animation: load 1s normal forwards;
+    background: skyblue;
+    height: 7px;
+    font-size: xx-small;
+    color: white;
+  }
+  
+  @keyframes load {
+    0% { width: 0; }
+    100% { width: 100%; }
+  }
+  
+  .card {
+    margin: 0 auto;
+    padding: 5px;
+    background-color: rgba(255,255,255,0.7);
+  }
+
+  form {
+    margin: 5px auto 10px;
+    text-align: left;
+  }
+
+  form label{
+    text-align: left;
+    display: inline-flex;
+    flex-direction: column;
+    font-size: x-small;
+    padding-right: 20px;
+  }
+
+  form input.date {
+    width: 80px;
+  }
+  form input.title {
+    width: 50vw;
+    min-width: 250px;
+  }
+  form input.countries {
+    width: 50px;
+  }
+
+  form + div {
+    padding: 10px 0;
+    text-align: left;
+    width: 80%;
+    margin: 0 auto;
+  }

@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
-import { filterGpxList, getGpxList, getYear, loadGeoJson } from "../helpers/gpxUtil";
+import { filterGpxList, getGpxList, getYear, loadGeoJsonFromGpx } from "../helpers/gpxUtil";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import SideBar from "./SideBar";
 import MainMap from "./MainMap";
 import Popup from "./Popup";
+import FileUpload from '../components/FileUpload';
 
-const Wrapper = () => {
+const Wrapper = ({ isLogged, setIsLogged }) => {
   const history = useNavigate();
   const params = useParams();
   const track = params.track;
+  const setting = params.setting;
   const year = track ? getYear(track) : getYearInParams(params)
   const country = getCountryInParams(params) || ''
 
@@ -64,7 +66,7 @@ const Wrapper = () => {
         const geojsonList = []
         const requests = gpxList.map( async (url, i) => {
           if (i < gpxList.length) {
-            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJson(url)
+            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJsonFromGpx(url)
             if (!allGeojsonList.find(json => json.url === url)) {
               geojson["url"] = url;
               if (url === track) {
@@ -128,7 +130,7 @@ const Wrapper = () => {
 
   return (
     <div className='wrapper'>
-        <SideBar
+        {!setting && <SideBar
             step={step}
             currentYear={currentYear}
             currentCountry={currentCountry}
@@ -136,7 +138,9 @@ const Wrapper = () => {
             geojsonList={geojsonList}
             handleClick={handleClickSideBar}
             handleClickTile={handleClickTile}
-        />
+            isLogged={isLogged}
+            setIsLogged={setIsLogged} 
+        />}
         <MainMap 
           geojsonList={geojsonList}
           tileName={currentTile}
@@ -146,6 +150,11 @@ const Wrapper = () => {
         {currentGeoJson && <Popup 
           geojson={currentGeoJson} 
           handleClickPopup={handleClickPopup} 
+        />}
+        {setting && <FileUpload 
+          isLogged={isLogged} 
+          setIsLogged={setIsLogged}
+          setGeojsonList={setGeojsonList}
         />}
     </div>
   );

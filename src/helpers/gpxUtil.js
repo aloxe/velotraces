@@ -28,7 +28,7 @@ export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
   return gpxList
 }
 
-export const loadGeoJson = async (url) => {
+export const loadGeoJsonFromGpx = async (url) => {
   try {
     const response = await axios.get('https://alix.guillard.fr/data/velo/gpx/'+url);
     const xmlDom = new DOMParser().parseFromString(response.data, 'application/xml');
@@ -44,12 +44,56 @@ export const loadGeoJson = async (url) => {
     geojson.title = getTitle(url)
     geojson.countries = getCountries(url)
     geojson.distance = getDistance(geojson)
+    geojson.slug = `${geojson.date}${toSlug(geojson.title)}.${geojson.countries.toString().replace(',','.')}`
+    // save geojson
+    // uploadJson(geojson)
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
     return
   }
 }
+
+export const uploadJson = async (geodata) => {
+  const body = JSON.stringify(geodata)
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/uploadjson.php', body, {
+    headers: { 'Content-Type': 'application/json' }
+});
+  const { data } = response;
+  return data;
+}
+
+export const uploadFile = async (file, onUploadProgress) => {
+  let formData = new FormData();
+  formData.append("file", file);
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/uploadfile.php', formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress,
+  });
+  const { data } = response;
+  if (data.status === 201) {
+    console.log("💾 " + data.message)
+    return data.name;
+  } else {
+    console.error("💢💢💢 " + data.message + " PAS SAUVÉ")
+    return null;
+  }
+};
+
+export const renameGpx = async (name, slug) => {
+  const body = JSON.stringify({name,slug})
+  const response = await axios.post('https://alix.guillard.fr/data/velo/api/renamegpx.php', body, {
+    headers: { 'Content-Type': 'application/json' }
+});
+  const { data } = response;
+  if (data.status === 201) {
+    console.log("💾 " + data.message)
+  } else {
+    console.error("💢💢💢 " + data.message)
+  }
+};
 
 function getBoundingBox(data) {
   var bounds = {}, coords, latitude, longitude;
@@ -164,6 +208,7 @@ export const getTitle = (file) => {
 export const getCountries = (file) => file.split('.').slice(1, -1)
 
 import lineDistance from "turf-line-distance";
+import { toSlug } from "./strings";
 
 export const getDistance = (geojson) => {
   const distance = lineDistance(geojson, 'kilometers');
