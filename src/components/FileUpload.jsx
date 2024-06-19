@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import {getDistance, loadGeoJsonFromGpx, renameGpx, uploadFile, uploadJson } from "../helpers/gpxUtil";
-import { colorRainbow, toSlug } from "../helpers/strings";
+import { calcColor, toSlug } from "../helpers/strings";
 import Login from "./Login";
 import './FileUpload.css'
-
 
 const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     const [currentGpx, setCurrentGpx] = useState(undefined);
@@ -21,15 +20,16 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     useEffect(() => {
       const getGeoJsonAwaited = async (name) => {
         const geojson = await loadGeoJsonFromGpx(name);
-        geojson.features.map((feature, i) => feature.properties.color = colorRainbow[i])
-        geojson.color = "rainbow"
+        const l = geojson.features;
+        geojson.features.map((feature, i) => feature.properties.color = calcColor(l,i));
+        geojson.color = "rainbow";
         setCurrentGeoJson(geojson);
-        setGeojsonList([geojson])
+        setGeojsonList([geojson]);
       }
       if (currentName) {
-        getGeoJsonAwaited(currentName)
+        getGeoJsonAwaited(currentName);
       }
-    }, [currentName]);
+    }, [currentName, setGeojsonList]);
 
     useEffect(() => {
       if (currentGeoJson) {

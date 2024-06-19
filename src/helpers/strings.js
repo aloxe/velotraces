@@ -18,20 +18,9 @@ export const toSlug = (str) => {
     .replace(/-[-]+/g, "-");
 }
 
-export const colorRainbow = [
-  'red',
-  'maroon',
-  'brown',
-  'tan',
-  'orange',
-  'peach',
-  'yellow',
-  'lime',
-  'olive',
-  'green',
-  'teal',
-  'cyan',
-  'blue',
-  'navy',
-  'purple'
-]
+export const calcColor = (length, val) => {
+    var minHue=240, maxHue=0;
+    var curPercent = (val)/(length);
+    return `hsl(${((curPercent*(maxHue-minHue))+minHue).parseInt()},100%,50%)`;
+}
+
