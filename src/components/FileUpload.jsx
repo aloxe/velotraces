@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Dropzone from "react-dropzone";
 import {getDistance, loadGeoJsonFromGpx, renameGpx, uploadFile, uploadJson } from "../helpers/gpxUtil";
-import { calcColor, toSlug } from "../helpers/strings";
+import { toSlug } from "../helpers/strings";
 import Login from "./Login";
 import './FileUpload.css'
 
@@ -16,13 +16,18 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
       title: '',
       countries: [],
     });
-    
+
+    const calcColor = (length, val) => {
+      var minHue=320, maxHue=0;
+      var curPercent = (val-1)/(length-1);
+      return `hsl(${Math.round((curPercent*(maxHue-minHue))+minHue)},100%,50%)`;
+  }
+
     useEffect(() => {
       const getGeoJsonAwaited = async (name) => {
         const geojson = await loadGeoJsonFromGpx(name);
-        const l = geojson.features;
+        const l = geojson.features.length;
         geojson.features.map((feature, i) => feature.properties.color = calcColor(l,i));
-        geojson.color = "rainbow";
         setCurrentGeoJson(geojson);
         setGeojsonList([geojson]);
       }
@@ -71,8 +76,9 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
         currentGeoJson.title = form.title;
         currentGeoJson.countries = form.countries;
         currentGeoJson.distance = getDistance(currentGeoJson)
-        currentGeoJson.slug = `${currentGeoJson.date}-${toSlug(currentGeoJson.title)}.${currentGeoJson.countries.toString().replace(',','.')}`
-        await renameGpx(currentName, currentGeoJson.slug)
+        currentGeoJson.slug = `${currentGeoJson.date}-${toSlug(currentGeoJson.title)}`
+        const geoslug = `${currentGeoJson.slug}.${currentGeoJson.countries.toString().replace(',','.')}`
+        await renameGpx(currentName, geoslug)
         const saved = await uploadJson(currentGeoJson)
         if (saved.status === 201) {
           setMessage(`💾 ${saved.filename}`)

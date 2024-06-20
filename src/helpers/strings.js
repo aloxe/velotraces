@@ -18,9 +18,4 @@ export const toSlug = (str) => {
     .replace(/-[-]+/g, "-");
 }
 
-export const calcColor = (length, val) => {
-    var minHue=240, maxHue=0;
-    var curPercent = (val)/(length);
-    return `hsl(${((curPercent*(maxHue-minHue))+minHue).parseInt()},100%,50%)`;
-}
 

@@ -55,6 +55,7 @@ export const loadGeoJsonFromGpx = async (url) => {
 }
 
 export const uploadJson = async (geodata) => {
+  console.log("upload", geodata);
   const body = JSON.stringify(geodata)
   const response = await axios.post('https://alix.guillard.fr/data/velo/api/uploadjson.php', body, {
     headers: { 'Content-Type': 'application/json' }
