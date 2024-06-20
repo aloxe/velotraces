@@ -39,7 +39,7 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             // use patch-package to update pigeon-maps 
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
-        if (geojson.color === "rainbow") {
+        if (geojson.features.length > 1) { // rainbow colours for multi paths geojson
           return {
             strokeWidth: "2",
             stroke: feature.properties.color,
