@@ -1,10 +1,10 @@
 <?php
-$velotracks = "gpx";
+$velotracks = "json";
 $year = $_REQUEST['y'];
 /* make sure country is iso 3166 */
 if ($_REQUEST['c']) $country = ".".$_REQUEST['c'];
 
-// An array of the gpx file names
+// An array of the json file names
 $tracks = array();
 
 //Open images directory
@@ -12,7 +12,7 @@ $dir = opendir($velotracks);
 
 //List files in tracks directory
 while (($file = readdir($dir)) !== false) {
-    if (substr($file, -3, 3)=="gpx") {
+    if (substr($file, -4, 4)=="json") {
         // if no selection we display all tracks
         if (!$year && !$country) {
             $tracks[] = $file;
@@ -43,7 +43,7 @@ foreach ($tracks as $key => $val) {
             // convert iso 3166 letter to flag
             $lettred = mb_convert_encoding('&#' . (ord(substr($v, 0, 1)) + 127462 - 97) . ';', 'UTF-8', 'HTML-ENTITIES');
             $lettref = mb_convert_encoding('&#' . (ord(substr($v, 1, 2)) + 127462 - 97) . ';', 'UTF-8', 'HTML-ENTITIES');
-            $flag = $flag."<C2><A0>".$lettred.$lettref;
+            $flag = $flag." ".$lettred.$lettref;
         }
         $trackobject = (object) ['id' => $i, 'date' => $date, 'name' => $name, 'url' => $val, 'cc' => $cc, 'flag' => $flag];
         array_push($trackliste, $trackobject);
