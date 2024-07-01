@@ -11,6 +11,16 @@ export const getGpxList = async () => {
   }
 }
 
+export const getGeoJsonList = async () => {
+  try {
+    const response = await axios.get('https://alix.guillard.fr/data/velo/velotraces.json.php');
+    return response.data
+  } catch (error) {
+    console.error('oups Error fetching data:', error.message);
+    return([])
+  }
+}
+
 export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
   const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
   const loadYear = currentYear === 'all' ? '' : currentYear;
@@ -47,6 +57,17 @@ export const loadGeoJsonFromGpx = async (url) => {
     geojson.slug = `${geojson.date}${toSlug(geojson.title)}.${geojson.countries.toString().replace(',','.')}`
     // save geojson
     // uploadJson(geojson)
+    return geojson;
+  } catch (error) {
+    console.error('Error fetching gpx data:', error.message);
+    return
+  }
+}
+
+export const loadGeoJsonFromSlug = async (slug) => {
+  try {
+    const response = await axios.get(`https://alix.guillard.fr/data/velo/json/${slug}`);
+    const geojson = response.data
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
