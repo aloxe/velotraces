@@ -34,28 +34,26 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
         data={geojson}
         styleCallback={(feature) => {
           if (feature?.geometry?.type === "Point") {
-            // removing ugly display for points. Points still triggers some bug in zoom and page positionning
-            // TODO: track issue
-            // use patch-package to update pigeon-maps 
+            // removing display for points.
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
-        if (geojson.features.length > 1) { // rainbow colours for multi paths geojson
-          return {
-            strokeWidth: "2",
-            stroke: feature.properties.color,
-            strokeLinejoin: 'round',
-            opacity: '0.8',
-          };
-        }
-        if (geojson.url === currentGeoJson?.url) {
+        if (geojson.url === currentGeoJson?.url) { // sellected path
+          if (geojson.features.length > 1) { // rainbow colours for multi paths geojson
             return {
               strokeWidth: "4",
-              stroke: 'MediumBlue',
+              stroke: feature.properties.color || "Navy",
               strokeLinejoin: 'round',
               opacity: '1',
             };
           }
           return {
+            strokeWidth: "4",
+            stroke: 'MediumBlue',
+            strokeLinejoin: 'round',
+            opacity: '1',
+          };
+        }
+        return {
             strokeWidth: "3",
             stroke: 'red',
             strokeLinejoin: 'round',
