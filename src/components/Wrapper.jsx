@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getCountryInParams, getYearInParams } from "../helpers/routerUtils";
-import { filterGpxList, getGpxList, getYear, loadGeoJsonFromGpx } from "../helpers/gpxUtil";
+import { filterGeojsonList, getGeoJsonList, getYear, loadFullGeoJsonFromSlug } from "../helpers/gpxUtil";
 import { flagToCountryCode } from "../helpers/countryUtil";
 import SideBar from "./SideBar";
 import MainMap from "./MainMap";
@@ -17,10 +17,9 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
   const country = getCountryInParams(params) || ''
 
   const [step, setStep] = useState(0);
-  const [allGpxList, setAllGpxList] = useState([]);
-  const [gpxList, setGpxList] = useState([]);
+  const [allTrackList, setAllTrackList] = useState([]);
+  const [trackList, setTrackList] = useState([]);
   const [geojsonList, setGeojsonList] = useState([]);
-  const [allGeojsonList, setAllGeojsonList] = useState([]);
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
   const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
@@ -35,58 +34,53 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
 
   useEffect(() => {
     if (step===1) {
-      // load list of gpx files
-      const getGpxListAwaited = async () => {
-        const gpxList = await getGpxList()
-        gpxList.length && setAllGpxList(gpxList)
+      // load list of all geojson files
+      const getGeojsonListAwaited = async () => {
+        const trackList = await getGeoJsonList()
+        trackList.length && setAllTrackList(trackList)
         setStep(2) // > filter list
       }
-      getGpxListAwaited()
+      getGeojsonListAwaited()
     }
   }, [step]);
 
   useEffect(() => {
     if (step===2) {
-      // filter list of gpx files
-      const gpxListFiltered = filterGpxList(currentYear, currentCountry, allGpxList)
-      if (gpxListFiltered.length) {
+      // filter list of geojson files
+      const trackListFiltered = filterGeojsonList(currentYear, currentCountry, allTrackList)
+      if (trackListFiltered.length) {
         setStep(3) // > load GeoJsonLists to map
-        setGpxList(gpxListFiltered)
+        setTrackList(trackListFiltered)
       } else {
-        setGeojsonList([])
-        setStep(4) // done TOD: set message for empty map
+        setTrackList([])
+        setStep(4) // done TODO: set message for empty map
       }
     }
-  }, [step, currentYear, currentCountry, allGpxList, gpxList, allGeojsonList]);
+  }, [step, currentYear, currentCountry, allTrackList]);
 
   useEffect(() => {
     if (step===3) {
       // load geojson from a list of gpx files
-      const setGeoJsonListAwaited = async (gpxList) => {
+      const setGeoJsonListAwaited = async (trackList) => {
         const geojsonList = []
-        const requests = gpxList.map( async (url, i) => {
-          if (i < gpxList.length) {
-            const geojson = allGeojsonList.find(json => json.url === url) || await loadGeoJsonFromGpx(url)
-            if (!allGeojsonList.find(json => json.url === url)) {
-              geojson["url"] = url;
-              if (url === track) {
-                setCurrentGeoJson(geojson)
-                handleClickPopup("open", geojson)
+        const requests = trackList.map( async (json, i) => {
+          if (i < trackList.length) {
+            const fullGeojson = await loadFullGeoJsonFromSlug(json.slug)
+            if (json.slug === track) {
+                setCurrentGeoJson(fullGeojson)
+                handleClickPopup("open", fullGeojson)
               }
-              allGeojsonList.push(geojson)
-            }
-            geojsonList.push(geojson)
+            geojsonList.push(fullGeojson)
           }
         })
         Promise.all(requests).then(() => {
-          setAllGeojsonList(allGeojsonList)
           setGeojsonList(geojsonList)
           setStep(4) // done
         })
       }
-      setGeoJsonListAwaited(gpxList)
+      setGeoJsonListAwaited(trackList)
     }
-  }, [step, gpxList, allGeojsonList, track]);
+  }, [step, trackList, track, currentGeoJson]);
 
   const handleClickTile = (e) => {
     setCurrentTile(e.target.alt)
@@ -124,7 +118,7 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
       setCurrentGeoJson(null)
     } else {
       setCurrentGeoJson(geoJsonClick)
-      history(`/t/${geoJsonClick.url}`)
+      history(`/t/${geoJsonClick.slug}`)
     }
   }
 
