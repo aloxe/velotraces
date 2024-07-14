@@ -29,7 +29,7 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
     if (!geojson)  return null;
     return (
       <GeoJson
-      className={geojson.url === currentGeoJson?.url && "CURRENT"}
+      className={geojson.slug === currentGeoJson?.slug && "CURRENT"}
         key={key}
         data={geojson}
         styleCallback={(feature) => {
@@ -37,7 +37,7 @@ const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
             // removing display for points.
             return { strokeWidth: "0", stroke: "black", r: '0', };
           }
-        if (geojson.url === currentGeoJson?.url) { // sellected path
+        if (geojson.slug && geojson.slug === currentGeoJson?.slug) { // sellected path
           if (geojson.features.length > 1) { // rainbow colours for multi paths geojson
             return {
               strokeWidth: "4",

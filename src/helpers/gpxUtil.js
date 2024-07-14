@@ -11,6 +11,31 @@ export const getGpxList = async () => {
   }
 }
 
+export const getGeoJsonList = async () => {
+  try {
+    const response = await axios.get('https://alix.guillard.fr/data/velo/velotraces.json.php');
+    return response.data
+  } catch (error) {
+    console.error('oups Error fetching data:', error.message);
+    return([])
+  }
+}
+
+export const filterGeojsonList = (currentYear, currentCountry, allGeojsonList) => {
+  const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
+  const loadYear = currentYear === 'all' ? '' : currentYear;
+  const geojsonList = allGeojsonList.filter(json => {
+    if (!loadCountry) {
+      return json.date.substr(0, 4) === loadYear
+    }
+    if (!loadYear) {
+      return json.countries.includes(loadCountry)
+    }
+    return json.date.substr(0, 4) === loadYear && json.countries.includes(loadCountry)
+  })
+  return geojsonList
+}
+
 export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
   const loadCountry = currentCountry === 'xx' ? '' : currentCountry;
   const loadYear = currentYear === 'all' ? '' : currentYear;
@@ -26,6 +51,17 @@ export const filterGpxList = (currentYear, currentCountry, allGpxList) => {
     return year === loadYear && Countries.includes(loadCountry)
   })
   return gpxList
+}
+
+export const loadFullGeoJsonFromSlug = async (slug) => {
+  try {
+    const response = await axios.get('https://alix.guillard.fr/data/velo/json/'+slug+'.json');
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching gpx data:', error.message);
+    return
+  }
 }
 
 export const loadGeoJsonFromGpx = async (url) => {
@@ -50,6 +86,17 @@ export const loadGeoJsonFromGpx = async (url) => {
     return geojson;
   } catch (error) {
     console.error('Error fetching gpx data:', error.message);
+    return
+  }
+}
+
+export const loadGeoJsonFromSlug = async (slug) => {
+  try {
+    const response = await axios.get(`https://alix.guillard.fr/data/velo/json/${slug}`);
+    const geojson = response.data
+    return geojson;
+  } catch (error) {
+    console.error('Error fetching geojson data:', error.message);
     return
   }
 }
