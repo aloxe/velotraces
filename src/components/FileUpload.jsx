@@ -28,6 +28,7 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
         const geojson = await loadGeoJsonFromGpx(name);
         const l = geojson.features.length;
         geojson.features.map((feature, i) => feature.properties.color = calcColor(l,i));
+        geojson.gpx = true;
         setCurrentGeoJson(geojson);
         setGeojsonList([geojson]);
       }
@@ -72,6 +73,7 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     };
 
       const uploadjson = async () => {
+        delete currentGeoJson.gpx;
         currentGeoJson.date = form.date;
         currentGeoJson.title = form.title;
         currentGeoJson.countries = form.countries;
