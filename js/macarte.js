@@ -1,5 +1,5 @@
 moment.locale('en');
-var trackFolder = '/data/velo/gpx';
+var trackFolder = '../data/velo/gpx';
 
 var ownCopyright = ' et <a href="http://alix.guillard.fr">Alix Guillard</a>';
 
