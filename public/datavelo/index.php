@@ -38,7 +38,7 @@ while (($file = readdir($dir)) !== false) {
 }
 closedir($dir);
 
-asort($tracks);
+sort($tracks);
 $known_countries = array();
 $known_country_year = array();
 echo "<table class=\"countries\"><tr>";

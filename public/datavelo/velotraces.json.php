@@ -25,6 +25,6 @@ while (($file = readdir($dir)) !== false) {
   }
 }
 closedir($dir);
-// asort($tracks);
-echo json_encode($tracks); //, JSON_PRETTY_PRINT);
+sort($tracks);
+echo json_encode($tracks);
 ?>

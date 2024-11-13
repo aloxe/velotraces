@@ -29,6 +29,7 @@ while (($file = readdir($dir)) !== false)
   }
 closedir($dir);
 
+sort($tracks);
 echo json_encode($tracks); //, JSON_PRETTY_PRINT);
 
 ?>
