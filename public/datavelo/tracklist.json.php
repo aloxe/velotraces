@@ -26,7 +26,7 @@ while (($file = readdir($dir)) !== false) {
 }
 closedir($dir);
 sort($tracks);
-$trackliste = [];
+$tracklist = [];
 $i = 0;
 foreach ($tracks as $key => $val) {
     $date = substr($val, 0, 10);
@@ -46,8 +46,8 @@ foreach ($tracks as $key => $val) {
             $flag = $flag." ".$lettred.$lettref;
         }
         $trackobject = (object) ['id' => $i, 'date' => $date, 'name' => $name, 'url' => $val, 'cc' => $cc, 'flag' => $flag];
-        array_push($trackliste, $trackobject);
+        array_push($tracklist, $trackobject);
     }
 }
-echo json_encode($trackliste);
+echo json_encode($tracklist);
 ?>
