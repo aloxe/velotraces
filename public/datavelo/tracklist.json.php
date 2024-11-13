@@ -25,8 +25,8 @@ while (($file = readdir($dir)) !== false) {
     }
 }
 closedir($dir);
-$trackliste = [];
 sort($tracks);
+$trackliste = [];
 $i = 0;
 foreach ($tracks as $key => $val) {
     $date = substr($val, 0, 10);
