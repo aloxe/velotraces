@@ -26,6 +26,10 @@ while (($file = readdir($dir)) !== false) {
 }
 closedir($dir);
 
-$trackobject = (object) ['number' => sizeof($tracks)];
+sort($tracks);
+$firstyear = substr($tracks[0], 0, 4);
+$lastyear = substr(end($tracks), 0, 4);
+
+$trackobject = (object) ['number' => sizeof($tracks), "years" => [$firstyear, $lastyear]];
 echo json_encode($trackobject);
 ?>
