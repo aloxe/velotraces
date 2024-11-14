@@ -30,7 +30,6 @@ $tracklist = [];
 $i = 0;
 foreach ($tracks as $key => $val) {
     $date = substr($val, 0, 10);
-    if ($date != "2010-01-01") {
         $i++;
         $countries = explode(".", $val);
         $name = preg_replace("/[-_]/", " ", substr($countries[0], 10));
@@ -47,7 +46,6 @@ foreach ($tracks as $key => $val) {
         }
         $trackobject = (object) ['id' => $i, 'date' => $date, 'name' => $name, 'url' => $val, 'cc' => $cc, 'flag' => $flag];
         array_push($tracklist, $trackobject);
-    }
 }
 echo json_encode($tracklist);
 ?>
