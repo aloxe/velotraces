@@ -1,6 +1,12 @@
 name: Deploy 🚲 velotraces
 
 on:
+  workflow_dispatch:
+  - confirmed_prod_deployment:
+      description: "Deploy to prod? Think again!"
+      type: boolean
+      default: false
+      required: true
   push:
     branches: [ main ]
 
@@ -13,7 +19,13 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Verify production deployment confirmation
+        if: ${{ matrix.confirmed_prod_deployment != true }}
+        run: |
+          echo You need to confirm to deploy to production
+          exit 1
+      - name: checkout trunk 🌳
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
