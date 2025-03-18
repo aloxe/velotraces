@@ -11,11 +11,6 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     const [currentGeoJson, setCurrentGeoJson] = useState(undefined);
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState("")
-    const [form, setForm] = useState({
-      date: '',
-      title: '',
-      countries: [],
-    });
 
     const calcColor = (length, val) => {
       var minHue=320, maxHue=0;
@@ -36,16 +31,6 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
         getGeoJsonAwaited(currentName);
       }
     }, [currentName, setGeojsonList]);
-
-    useEffect(() => {
-      if (currentGeoJson) {
-        setForm({
-          date: currentGeoJson.date,
-          title: currentGeoJson.title,
-          countries: currentGeoJson.countries
-        })
-      }
-    }, [currentGeoJson]);
 
     useEffect(() => {
       const uploadgpx = async () => {
@@ -74,9 +59,6 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
 
       const uploadjson = async () => {
         delete currentGeoJson.gpx;
-        currentGeoJson.date = form.date;
-        currentGeoJson.title = form.title;
-        currentGeoJson.countries = form.countries;
         currentGeoJson.distance = getDistance(currentGeoJson)
         currentGeoJson.slug = `${currentGeoJson.date}-${toSlug(currentGeoJson.title)}`
         const geoslug = `${currentGeoJson.slug}.${currentGeoJson.countries.toString().replace(',','.')}`
@@ -92,7 +74,7 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
         setCurrentGeoJson(null)
       };
 
-      const updateName = async (e) => {
+      const updateFeatureName = async (e) => {
         const i = e.target.name;
         let newFeatures = currentGeoJson.features
         newFeatures[i].properties.name = e.target.value;
@@ -132,38 +114,32 @@ const FileUpload = ({ isLogged, setIsLogged, setGeojsonList }) => {
     {currentGeoJson && <div className="card">
         <form>
           <label>Date: 
-            <input type="text" className="date" name="date" value={form.date} onChange={e => {
-            setForm({
-              ...form,
-              date: e.target.value
-            });
-          }}/>
+            <input type="text" className="date" name="date"
+              value={currentGeoJson.date} 
+              onChange={e => { setCurrentGeoJson({...currentGeoJson, date: e.target.value}) }}
+            />
           </label>
           <label>Title:
-            <input type="text" className="title" name="title" value={form.title} onChange={e => {
-            setForm({
-              ...form,
-              title: e.target.value
-            });
-          }}/>
+            <input type="text" className="title" name="title" 
+              value={currentGeoJson.title} 
+              onChange={e => { setCurrentGeoJson({...currentGeoJson, title: e.target.value}) }}
+            />
           </label>
           <label>
             Countries: 
-            <input type="text" className="countries" name="countries" value={form.countries.toString()} onChange={e => {
-            setForm({
-              ...form,
-              countries: e.target.value.split(',')
-            });
-          }}/>
+            <input type="text" className="countries" name="countries" 
+              value={currentGeoJson.countries.toString()} 
+              onChange={e => { setCurrentGeoJson({...currentGeoJson, countries: e.target.value.split(',')}) }}
+            />
           </label>
           <div></div>
        </form>
-       <div><b>Filename:</b> {`${form.date}-${form.title && toSlug(form.title.trim())}${form.countries.map(cc=>`.${cc}`).join('')}.json`}      
+       <div><b>Filename:</b> {`${currentGeoJson.date}-${currentGeoJson.title && toSlug(currentGeoJson.title.trim())}${currentGeoJson.countries.map(cc=>`.${cc}`).join('')}.json`}      
        </div>
        {<form>
        {currentGeoJson.features.length > 1 && currentGeoJson.features.map((feat,i) => {
         return (<label key={i}><div><span style={{color: feat.properties.color ?? "indogo"}}>◉</span> {feat.properties.time}:</div>
-          <input type="text" name={i} value={feat.properties.name} onChange={updateName} />
+          <input type="text" name={i} value={feat.properties.name} onChange={updateFeatureName} />
         </label>)
        })}
        </form>}
