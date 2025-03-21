@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       confirmed_prod_deployment:
-        description: "Deploy to prod? Think again!"
+        description: "Deploy to prod? Please confirm!"
         type: boolean
         default: false
         required: true
@@ -14,25 +14,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-      - name: Outpus for deployment
-        run: echo "inputs ${{ github.event.inputs }} event ${{ github.event }} github ${{ github }}"
       - name: Verify production deployment confirmation
         if: ${{ github.event.inputs &&github.event.inputs.confirmed_prod_deployment != true }}
         run: |
           echo You need to confirm to deploy to production
           exit 1
+
       - name: checkout trunk 🌳
-        uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
 
       - name: Install dependencies & yarn build
         run: |
