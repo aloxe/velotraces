@@ -1,12 +1,6 @@
 name: Deploy 🚲 velotraces
 
 on:
-  workflow_dispatch:
-    - confirmed_prod_deployment:
-      description: "Deploy to prod? Think again!"
-      type: boolean
-      default: false
-      required: true
   push:
     branches: [ main ]
 
