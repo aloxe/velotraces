@@ -16,9 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify production deployment confirmation
-        if: ${{ github.event.inputs &&github.event.inputs.confirmed_prod_deployment != true }}
         run: |
-          echo You need to confirm to deploy to production
+          echo "inputs.confirmed_prod_deployment ${{ inputs.confirmed_prod_deployment == true }} < deplo"
+          echo "github.head_ref ${{ github.head_ref}}"
+          echo "github.ref_name ${{ github.ref_name}}"
+          echo "github.ref ${{ github.ref}}"
+          echo "GITHUB_REF ${GITHUB_REF##*/}"
+
+      - name: Verify production deployment confirmation
+        if: ${{ inputs.confirmed_prod_deployment != true }}
+        run: |
+          echo ꫞ You need to confirm to deploy to production
           exit 1
 
       - name: checkout trunk 🌳
@@ -29,12 +37,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies & yarn build
+      - name: Install dependencies & yarn build ⛮
         run: |
           yarn install --frozen-lockfile
           yarn build --base=/velo/traces/
 
-      - name: Copy Site recursively to remote
+      - name: Copy Site recursively to remote 𐇐
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -46,7 +54,7 @@ jobs:
           strip_components: 1
           rm: true
 
-      - name: Copy php recursively to remote
+      - name: Copy php recursively to remote 𐇵
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -57,7 +65,7 @@ jobs:
           target: "domains/alix.guillard.fr/public_html/data/velo"
           strip_components: 2
 
-      - name: Configure SSH
+      - name: Configure SSH 𐀮
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
