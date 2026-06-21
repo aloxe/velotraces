@@ -24,10 +24,10 @@ jobs:
       - name: checkout trunk 🌳
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 𝟚𝟘
+      - name: Setup Node.js 𝟚4
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install dependencies & yarn build ⛮
         run: |
@@ -75,3 +75,4 @@ jobs:
           SSH_KEY: ${{ secrets.KEY }}
           SSH_HOST: ${{ secrets.HOST }}
           SSH_PORT: ${{ secrets.PORT }}
+
