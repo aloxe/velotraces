@@ -22,7 +22,7 @@ const Wrapper = ({ isLogged, setIsLogged }) => {
   const [geojsonList, setGeojsonList] = useState([]);
   const [currentYear, setCurrentYear] = useState(year);
   const [currentCountry, setCurrentCountry] = useState(country);
-  const [currentTile, setCurrentTile] = useState('CartoDBVoyager');
+  const [currentTile, setCurrentTile] = useState('ThunderforestAtlas');
   const [currentGeoJson, setCurrentGeoJson] = useState(null);
 
   useEffect(() => {

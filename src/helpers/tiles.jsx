@@ -2,7 +2,7 @@
 // https://leaflet-extras.github.io/leaflet-providers/preview/
 // tiles mapbox https://www.mapbox.com/api-documentation/#maps
 
-export const tiles = ['CyclOSM', 'mapboxOutdoor', 'esriWorldImagery', 'CartoDBVoyager'];
+export const tiles = ['CyclOSM', 'mapboxOutdoor', 'esriWorldImagery', 'ThunderforestAtlas'];
 
 // CyclOSM
 export const CyclOSM = {
@@ -21,6 +21,16 @@ export const ThunderforestCycle = {
 	},
 	attribution: () => (<>&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a></>)
 }
+
+// Thunderforest Atlas
+export const ThunderforestAtlas = {
+	tiles: (x, y, z) => {
+		const s = String.fromCharCode(97 + ((x + y + z) % 3))
+		return `http://${s}.tile.thunderforest.com/atlas/${z}/${x}/${y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_TOKEN}`
+	},
+	attribution: () => (<>&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</>)
+}
+
 
 // Mapbox
 export const mapboxStreet = {
@@ -45,7 +55,17 @@ export const esriPhysical = {
 	attribution: () => (<>Tiles &copy; Esri &mdash; Source: US National Park Service</>)
 }
 
-// Carto DB 
+// ESRI World Physical
+export const esriPhysical = {
+	tiles: (x, y, z) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}`,
+	attribution: () => (<>Tiles &copy; Esri &mdash; Source: US National Park Service</>)
+}
+
+export const Jawg_Sunny = {
+		tiles: (x, y, z) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}`,
+}
+
+// Carto DB // needs an API key https://carto.com/basemaps/apikey/
 export const CartoDBVoyager = {
 	tiles: (x, y, z, dpr) => {
 		const s = String.fromCharCode(97 + ((x + y + z) % 3))
