@@ -7,7 +7,7 @@ import './MainMap.css'
 const MainMap = ({geojsonList, tileName, handleClickPopup, currentGeoJson}) => {
   const [center, setCenter] = useState({lon:3, lat:50});
   const [zoom, setZoom] = useState(8);
-  const [currentTiles, setCurrentTiles] = useState(Tiles.ThunderforestAtlas)
+  const [currentTiles, setCurrentTiles] = useState(Tiles.Jawg_Sunny)
 
   useEffect(() => {
     if (currentGeoJson) {

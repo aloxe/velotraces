@@ -2,7 +2,7 @@
 // https://leaflet-extras.github.io/leaflet-providers/preview/
 // tiles mapbox https://www.mapbox.com/api-documentation/#maps
 
-export const tiles = ['CyclOSM', 'mapboxOutdoor', 'esriWorldImagery', 'ThunderforestAtlas'];
+export const tiles = ['CyclOSM', 'mapboxOutdoor', 'esriWorldImagery', 'Jawg_Sunny'];
 
 // CyclOSM
 export const CyclOSM = {
@@ -55,14 +55,11 @@ export const esriPhysical = {
 	attribution: () => (<>Tiles &copy; Esri &mdash; Source: US National Park Service</>)
 }
 
-// ESRI World Physical
-export const esriPhysical = {
-	tiles: (x, y, z) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}`,
-	attribution: () => (<>Tiles &copy; Esri &mdash; Source: US National Park Service</>)
-}
-
+// JAWG Sunny
 export const Jawg_Sunny = {
-		tiles: (x, y, z) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}`,
+	tiles: (x, y, z) => `https://tile.jawg.io/jawg-sunny/${z}/${x}/${y}.png?access-token=${import.meta.env.VITE_JAWG_TOKEN}`,
+	attribution: () => (<><a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</>),
+	accessToken: () => import.meta.env.VITE_JAWG_TOKEN
 }
 
 // Carto DB // needs an API key https://carto.com/basemaps/apikey/
